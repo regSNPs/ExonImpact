@@ -1,0 +1,223 @@
+td.details-control {
+	background: url('../pic/nav-dt.png') no-repeat center center;
+	cursor: pointer;
+}
+
+tr.shown td.details-control {
+	background: url('../pic/nav-e.png') no-repeat center center;
+  	height:95px;
+	width:100%;  
+}
+
+#header{
+	background-color:#800000;
+	height:95px;
+	width:100%;
+}
+
+body {
+
+	background-color:rgb(255,255,255);
+	border: 0px;
+	font-family: sans-serif;
+	font-style:italic;
+	font-size:12px;
+	margin: 0px;
+	padding: 0px;	
+	
+}
+
+h2{
+	margin: 0px;
+	background-color:rgb(210,210,210);
+	cursor: move;
+	height:25px;	
+	
+}
+
+#help{
+	
+	background-color:rgb(190,190,190);
+	color:rgb(0,0,0);	
+	text-decoration:none;
+	width: 50px;
+	height:25px;
+	float: right;
+	
+}
+
+#runPart{
+	display:none;
+
+
+}
+
+p.modualTitle{
+	position:absolute;
+	margin: 0px;
+	padding: 0px;
+	left:50%;
+	height:20px;
+	
+	
+}
+
+#leftPanelControl{
+	
+	display:none;
+	position:relative;
+	left:10px;
+	margin: 5px;
+	padding: 5px;
+	height: 80px; 
+	background-color: rgb(220,220,220);
+	
+}
+
+#gotoposition{
+	width:50px;
+	height: 20px; 
+	
+	
+	
+	
+}
+
+#inputModule{
+
+	position:relative;
+	left:10px;
+	background-color:rgb(255,255,255);
+	
+}
+
+#visualASModule{
+	position:relative;
+	left:10px;
+	margin: 0px;
+	padding: 0px;
+	background-color:rgb(255,255,255);
+}
+
+
+#exonsModule{
+	position:relative;
+	left:10px;
+	margin: 0px;
+	padding: 0px;
+	background-color:rgb(255,255,255);
+	
+	
+}
+
+#geneVisualModule{
+	position:relative;
+	margin: 0px;
+	padding: 0px;
+	background-color:rgb(255,255,255);
+	border: 0px; 
+
+}
+
+#geneVisual{
+	position:relative;
+	margin: 0px;
+	padding: 0px;
+	background-color:rgb(255,255,255);
+	border: 0px; 
+
+}
+
+#serachTitle{
+	margin:0px;
+	padding: 0px;
+	background-color:rgb(255,255,255);
+	margin-bottom:80px;		
+}
+
+#logo{
+	position:relative;
+	left:200px;
+	top:40px;
+	margin:0px;
+	padding: 0px;
+
+}
+
+#searchFild{
+	position:relative;
+	left:200px;
+	font-size:20px;
+	width: 500px;
+	height:40px;
+	
+	margin:0px;
+	padding: 0px;
+	margin-bottom:180px;
+	border: 2px solid #dadada;
+	border-radius: 7px;
+
+	
+}
+
+
+#submitQuery{
+	position:relative;
+	bottom:2px;
+	left:200px;
+	width: 80px;
+	height:40px;	
+	margin:0px;
+	padding: 0px;
+	background:#ffffff;
+	margin-bottom:150px;
+
+	border: 2px solid #dadada;
+	border-radius: 7px;
+	
+}
+
+#loadingGif{
+
+	display:none;
+	
+	
+}
+
+span.em{
+	font-size: 15px;
+	color:rgb(123,124,123);
+}
+
+#mainPage{
+	
+
+	
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+	/*
+	position:relative;
+	width:100%;
+	
+	
+	border-bottom:1px solid;
+	border-left:1px solid;
+	border-right:1px solid;
+	
+	box-shadow: 5px 5px 5px #888888;
+	*/
+	
+	box-shadow: 5px 5px 5px #888888;
+	
+}
+
+#asSymbol{
+	color:#FA8072;
+	
+}
+#constituteSymbol{
+	color:#800000;
+	
+}
+

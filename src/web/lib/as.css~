@@ -1,0 +1,150 @@
+body {
+	background-color:rgb(255,255,255);
+	margin: 0px;
+	padding: 0px;
+	font-family: sans-serif;
+	font-style:italic;
+	font-size:12px;
+}
+
+h2{
+	margin: 0px;
+	background-color:rgb(210,210,210);
+	cursor: move;
+	height:25px;	
+	
+}
+
+#help{
+	
+	background-color:rgb(190,190,190);
+	color:rgb(0,0,0);	
+	text-decoration:none;
+	width: 50px;
+	height:25px;
+	float: right;
+	
+}
+
+#runPart{
+	display:none;
+
+
+}
+
+#leftPanelControl{
+	
+	display:none;
+	position:relative;
+	left:10px;
+	margin: 5px;
+	padding: 5px;
+	height: 100px; 
+	background-color: rgb(220,220,220);
+	
+}
+
+#inputModule{
+
+	position:relative;
+	left:10px;
+	background-color:rgb(255,255,255);
+	
+}
+
+#visualASModule{
+	position:relative;
+	left:10px;
+	background-color:rgb(255,255,255);
+}
+
+
+#exonsModule{
+	position:relative;
+	left:10px;
+	margin: 0px;
+	padding: 0px;
+	background-color:rgb(255,255,255);
+	
+	
+}
+
+#geneVisualModule{
+	position:relative;
+	margin: 0px;
+	padding: 0px;
+	background-color:rgb(255,255,255);
+
+
+}
+
+#geneVisual{
+	position:relative;
+	margin: 0px;
+	padding: 0px;
+	background-color:rgb(255,255,255);
+
+
+}
+
+#serachTitle{
+	
+	background-color:rgb(255,255,255);
+			
+}
+
+#searchFild{
+	position:relative;
+	left:25%;
+	font-size:20px;
+	width: 500px;
+	height:40px;
+	
+	margin:10px;
+	margin-bottom:100px;
+	margin-right:0px;	
+	padding: 0px;
+	
+}
+
+
+#submitQuery{
+	position:relative;
+	left:26%;
+	width: 80px;
+	height:40px;	
+	margin:10px;
+	margin-bottom:100px;
+	margin-left:0px;	
+	padding: 0px;
+	
+}
+
+#logo{
+	position:relative;
+	left:24%;
+	top:40px;
+}
+
+span.em{
+	font-size: 15px;
+	color:rgb(123,124,123);
+}
+
+#mainPage{
+	position:relative;
+	left:5px;
+	margin: 0px;
+	padding: 0px;
+
+	
+	/*
+	border-bottom:1px solid;
+	border-left:1px solid;
+	border-right:1px solid;
+	
+	box-shadow: 5px 5px 5px #888888;
+	*/
+	
+}
+

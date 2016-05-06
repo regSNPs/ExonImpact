@@ -1,0 +1,5 @@
+database_path=/Users/mengli/Documents/splicingSNP/exon_impact_new/db/refseq.db
+phylop_path=/Users/mengli/Documents/splicingSNP/exon_impact_new/db/phylop/
+bed_path=/Users/mengli/Documents/splicingSNP/exon_impact_new/db/refGene_extern_hg19.bed
+fasta_path=/Users/mengli/Documents/splicingSNP/exon_impact_new/db/chromFa/
+
