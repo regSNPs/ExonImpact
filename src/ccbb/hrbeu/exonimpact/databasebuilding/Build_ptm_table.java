@@ -98,7 +98,7 @@ public class Build_ptm_table {
 			//Build_ptm_table.get_instance().drop_table_ptm();
 			Build_ptm_table.get_instance().create_table_ptm();
 			Build_ptm_table.get_instance()
-					.load_ptm_into_table("/Users/mengli/Documents/projects/new_tool/ptm_for_sqllite.tsv");
+					.load_ptm_into_table("/Users/mengli/Documents/splicingSNP/exon_impact_new/db/ens_ptm_for_sqllite.tsv");
 
 			//
 		} catch (SQLException e) {

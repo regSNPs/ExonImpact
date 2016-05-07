@@ -26,6 +26,7 @@ public class Transcript {
 	int cds_start = -1;
 	int cds_end = -1;
 
+	public ArrayList<Exon> flank_exons=new ArrayList<Exon>();
 	
 	ArrayList<Exon> exons = new ArrayList<Exon>();
 

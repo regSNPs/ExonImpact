@@ -3,6 +3,8 @@ package ccbb.hrbeu.exonimpact;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -10,7 +12,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 
 import ccbb.hrbeu.exonimpact.genestructure.Exon;
+import ccbb.hrbeu.exonimpact.genestructure.Match_status;
 import ccbb.hrbeu.exonimpact.genestructure.Transcript;
+import ccbb.hrbeu.exonimpact.genestructure.Transcript.ASTYPE;
+import ccbb.hrbeu.exonimpact.sequencefeaturewrapper.Bed_decoder;
 import ccbb.hrbeu.exonimpact.sequencefeaturewrapper.Bed_region_extractor;
 import ccbb.hrbeu.exonimpact.sequencefeaturewrapper.Extractor;
 import ccbb.hrbeu.exonimpact.sequencefeaturewrapper.Miso_decoder;
@@ -31,7 +36,7 @@ public class Exon_feature {
 	String raw_input = "";
 
 	boolean is_protein = false;
-	boolean is_match = false;
+	Match_status is_match = Match_status.not_match;
 
 	Tris<String, Integer, Integer> exon_region_in_genome = new Tris<String, Integer, Integer>();
 	Tris<String, Integer, Integer> exon_region_in_protein = new Tris<String, Integer, Integer>();
@@ -40,8 +45,20 @@ public class Exon_feature {
 	String Exon_id = "";
 	
 	public void build_feautre() throws SQLException, ClassNotFoundException {
-		Transcript fragment = Miso_decoder.get_instance().get_transcript(raw_input);
-
+		
+		Transcript fragment =null;
+		
+		if(Bed_decoder.is_bed(raw_input) ){
+			fragment = Bed_decoder.get_instance().get_transcript(raw_input);
+			
+		}else if(Miso_decoder.tellASType(raw_input)!=ASTYPE.UNKNOWN){
+			fragment = Miso_decoder.get_instance().get_transcript(raw_input);
+			
+		}else{
+			log.error("The input: "+raw_input+" is not bed format or miso format");
+			return;
+		}
+		
 		ArrayList<Transcript> mapped_transcripts = Bed_region_extractor.get_instance().getTranscripts(fragment.getChr(),
 				fragment.getTarget_start(), fragment.getTarget_end());
 
@@ -55,9 +72,9 @@ public class Exon_feature {
 			exon_region_in_genome.setValue2(fragment.getTarget_start());
 			exon_region_in_genome.setValue3(fragment.getTarget_end());
 
-			is_match = miso_match(exon_region_in_genome, iter_transcript);
+			is_match = miso_match(fragment, iter_transcript);
 
-			if (is_match) {
+			if (is_match.tell_match()) {
 				log.trace("The input is: " + raw_input + " and is match");
 				exon_region_in_protein = covert_to_protein_region(exon_region_in_genome, iter_transcript);
 
@@ -70,32 +87,61 @@ public class Exon_feature {
 			// iter_transcript);
 
 			exon_transcript_features.add(new Exon_transcript_feature(raw_input, iter_transcript,fragment,
-					iter_transcript.isIs_protein_coding(), is_match, exon_region_in_genome, exon_region_in_protein,
+					iter_transcript.isIs_protein_coding(), is_match,is_match.getExon_index(), exon_region_in_genome, exon_region_in_protein,
 					Feature_extractors));
 
 		}
 	}
 
-	private boolean miso_match(Tris<String, Integer, Integer> exon_region_in_genome2, Transcript transcript) {
+	private Match_status miso_match(Transcript fragment, Transcript transcript) {
 		// TODO Auto-generated method stub
 		// TODO!!! compare CDS and miso here, should be exon and miso!!!!!!!!!!!!
+		Match_status m = Match_status.not_match;
 		
-		int tx_start = exon_region_in_genome.getValue2();
-		int tx_end = exon_region_in_genome.getValue3();
-
-		for (Exon ite_exon : transcript.getExons()) {
+		String chr=fragment.getChr();
+		int target_start = fragment.getTarget_start();
+		int target_end = fragment.getTarget_end();
+		
+		String target_str=chr+":"+target_start+"-"+target_end;
+		
+		HashMap<String,Integer> all_exon=new HashMap<String,Integer>();
+		
+		int i=0;
+		for (Exon ite_exon : transcript.getExons() ) {
 
 			int exon_start = ite_exon.getExonBegCoorPos();
 			int exon_end = ite_exon.getExonEndCoorPos();
+			String one_str=chr+":"+exon_start+"-"+exon_end;
 
-			if (tx_start == exon_start && tx_end == exon_end) {
-				ite_exon.setAlternative(true);
-				return true;
+			all_exon.put(one_str,i++);
+		}
+		
+		if(!all_exon.containsKey(target_str)){
+			//return Match_status.not_match;
+
+			return Match_status.not_match;
+		}
+		
+		
+		for(i=0;i<fragment.flank_exons.size();++i){
+			
+			int flank_start = fragment.flank_exons.get(i).getExonBegCoorPos();
+			int flank_end = fragment.flank_exons.get(i).getExonEndCoorPos();
+			
+			String one_str=chr+":"+flank_start+"-"+flank_end;
+			
+			if(!all_exon.containsKey(one_str) ){
+				m=Match_status.partial_match;
+				m.setExon_index(all_exon.get(target_str).intValue() );
+				return m;
 			}
 			
 		}
-
-		return false;
+		
+		m=Match_status.whole_match;
+		m.setExon_index(all_exon.get(target_str).intValue() );
+		
+		return m;
 	}
 	
 	public Tris<String, Integer, Integer> covert_to_protein_region(

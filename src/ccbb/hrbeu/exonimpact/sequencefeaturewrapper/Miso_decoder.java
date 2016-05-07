@@ -75,6 +75,8 @@ public class Miso_decoder {
 				if (i == 1) {
 					fragment.setTarget_start(beg);
 					fragment.setTarget_end(end);
+				}else{
+					fragment.flank_exons.add(new Exon(chr,beg,end) );
 				}
 
 			}
@@ -128,6 +130,8 @@ public class Miso_decoder {
 
 			fragment.setTarget_start(beg);
 			fragment.setTarget_end(end);
+			
+			fragment.flank_exons.add(new Exon(chr,beg2,end2));
 		}
 
 		if (asType.equals(ASTYPE.A3SS)) {
@@ -139,6 +143,7 @@ public class Miso_decoder {
 			chr = quer[0];
 
 			fragment.addExon(new Exon(chr,beg, end));
+			fragment.flank_exons.add(new Exon(chr,beg,end));
 
 			quer = args[1].split("\\:", 20);
 			String[] ends = quer[1].split("\\|");
@@ -173,6 +178,8 @@ public class Miso_decoder {
 				if (i == 1) {
 					fragment.setTarget_start(beg);
 					fragment.setTarget_end(end);
+				}else{
+					fragment.flank_exons.add(new Exon(chr,beg,end));
 				}
 			}
 
@@ -210,7 +217,8 @@ public class Miso_decoder {
 			chr = quer[0];
 
 			fragment.addExon(new Exon(chr,beg, end));
-
+			fragment.flank_exons.add(new Exon(chr,beg,end));
+			
 			quer = args[0].split("\\:", 20);
 			String[] begs = quer[2].split("\\|");
 			end = Integer.parseInt(quer[1]);
@@ -245,6 +253,9 @@ public class Miso_decoder {
 
 			fragment.setTarget_start(beg);
 			fragment.setTarget_end(end);
+			
+			fragment.flank_exons.add(new Exon(chr,beg2,end2));
+			
 		}
 	}
 
@@ -268,7 +279,7 @@ public class Miso_decoder {
 		
 	}
 
-	protected ASTYPE tellASType(String pos) {
+	public static ASTYPE tellASType(String pos) {
 		if (Pattern.matches(regexCasseteExon, pos.subSequence(0, pos.length())))
 			return ASTYPE.SE;
 		else if (Pattern.matches(regexA5SS, pos.subSequence(0, pos.length())))

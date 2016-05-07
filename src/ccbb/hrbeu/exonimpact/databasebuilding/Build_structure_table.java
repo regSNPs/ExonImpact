@@ -43,7 +43,7 @@ public class Build_structure_table {
 
 	public void load_strucutre_into_table(String path_to_spinedx) throws IOException, SQLException {
 		List<String> spinedx_files = FileUtils.readLines(new File(path_to_spinedx));
-
+		
 		c.setAutoCommit(false);
 		stmt = c.createStatement();
 
@@ -112,7 +112,7 @@ public class Build_structure_table {
 			
 			Build_structure_table.get_instance().init(database_path);
 			
-			//Build_structure_table.get_instance().drop_table_strucutre();
+			Build_structure_table.get_instance().drop_table_strucutre();
 			Build_structure_table.get_instance().create_table_structure();
 			Build_structure_table.get_instance()
 					.load_strucutre_into_table(input_path);
@@ -135,7 +135,7 @@ public class Build_structure_table {
 
 	public static void main(String[] args) {
 		//run(args[0],args[1]);
-		run("configuration.txt","/Users/mengli/Documents/projects/new_tool/spine_x_d_combine.tsv");
+		run("configuration.txt","/Users/mengli/Documents/splicingSNP/exon_impact_new/db/ens_spine_x_d_combine.tsv");
 		
 	}
 	

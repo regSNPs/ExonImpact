@@ -99,7 +99,7 @@ public class Build_pfam_table {
 			//Build_pfam_table.get_instance().drop_table_pfam();
 			Build_pfam_table.get_instance().create_table_pfam();
 			Build_pfam_table.get_instance()
-					.load_pfam_into_table("/Users/mengli/Documents/projects/new_tool/hg19.protein.pfam.data");
+					.load_pfam_into_table("/Users/mengli/Documents/splicingSNP/exon_impact_new/db/ens_hg19.protein.pfam.data");
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

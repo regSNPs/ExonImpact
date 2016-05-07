@@ -11,6 +11,7 @@ import ccbb.hrbeu.exonimpact.sequencefeaturewrapper.Extractor;
 import ccbb.hrbeu.exonimpact.sequencefeaturewrapper.Extractor_phylop;
 import ccbb.hrbeu.exonimpact.util.Tris;
 import ccbb.hrbeu.exonimpact.genestructure.Exon;
+import ccbb.hrbeu.exonimpact.genestructure.Match_status;
 
 import java.io.File;
 import java.io.IOException;
@@ -72,7 +73,7 @@ public class Exon_transcript_feature {
 	
 	static{
 		feature_names2.add("raw_input");feature_names2.add("transcript_id");
-		feature_names2.add("is_match");feature_names2.add("is_protein");
+		feature_names2.add("is_match");feature_names2.add("exon_id");feature_names2.add("is_protein");
 		feature_names2.add("target_region");feature_names2.add("target_region_in_protein");
 		
 		feature_names2.add("phylop");
@@ -98,24 +99,27 @@ public class Exon_transcript_feature {
 		feature_names2.add("proteinLength");
 
 	}
-	
-	public Exon_transcript_feature(String raw_input, Transcript transcript, Transcript fragment, boolean is_protein, boolean is_match,
-			Tris<String, Integer, Integer> exon_region_in_genome, Tris<String, Integer, Integer> exon_region_in_protein,
-			ArrayList<Extractor> Feature_extractors) throws SQLException, ClassNotFoundException {
-		
-		this.miso_frag=fragment;
-		this.transcript=transcript;
-		this.transcript_id = transcript.getTranscript_id();
-		this.raw_input = raw_input;
-		this.is_protein = is_protein;
-		this.is_match = is_match;
-		this.exon_region_in_genome = exon_region_in_genome;
-		this.exon_region_in_protein = exon_region_in_protein;
 
-		if (is_match) {
+	private int exon_index=-1;
+	
+	public Exon_transcript_feature(String raw_input2, Transcript iter_transcript, Transcript fragment,
+			boolean is_protein_coding, Match_status is_match2, int exon_index,
+			Tris<String, Integer, Integer> exon_region_in_genome2,
+			Tris<String, Integer, Integer> exon_region_in_protein2, ArrayList<Extractor> feature_extractors2) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated constructor stub
+		this.miso_frag=fragment;
+		this.transcript=iter_transcript;
+		this.transcript_id = iter_transcript.getTranscript_id();
+		this.raw_input = raw_input2;
+		this.is_protein = is_protein_coding;
+		this.exon_index=exon_index;
+		this.is_match = is_match2;
+		this.exon_region_in_genome = exon_region_in_genome2;
+		this.exon_region_in_protein = exon_region_in_protein2;
+
+		if (is_match.tell_match()) {
 			build_feature();
 		}
-		
 	}
 
 	ArrayList<Extractor> Feature_extractors = new ArrayList<Extractor>();
@@ -125,7 +129,7 @@ public class Exon_transcript_feature {
 	Transcript miso_frag=null;
 	
 	private Boolean is_protein = false;
-	private Boolean is_match = false;
+	private Match_status is_match = null;
 
 	private Tris<String, Integer, Integer> exon_region_in_genome = new Tris<String, Integer, Integer>();
 	private Tris<String, Integer, Integer> exon_region_in_protein = new Tris<String, Integer, Integer>();
@@ -505,6 +509,9 @@ public class Exon_transcript_feature {
 		//FileUtils.writeStringToFile(new File(output_str), ",", true);
 		line.append(is_match+",");
 
+		
+		line.append(this.transcript_id+"_"+exon_index+",");
+
 		//FileUtils.writeStringToFile(new File(output_str), is_protein.toString(), true);
 		//FileUtils.writeStringToFile(new File(output_str), ",", true);
 		line.append(is_protein+",");
@@ -551,11 +558,11 @@ public class Exon_transcript_feature {
 		this.is_protein = is_protein;
 	}
 
-	public boolean isIs_match() {
+	public Match_status isIs_match() {
 		return is_match;
 	}
 
-	public void setIs_match(boolean is_match) {
+	public void setIs_match(Match_status is_match) {
 		this.is_match = is_match;
 	}
 

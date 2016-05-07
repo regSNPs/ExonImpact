@@ -6,7 +6,7 @@ public class Exon {
 	
 	public Exon(String torg, String tchr, String tseq, int tbegPos, int tendPos) {
 		org = torg;
-		tchr=chr;
+		chr=tchr;
 		sequence = tseq;
 		begPos = tbegPos;
 		endPos = tendPos;
