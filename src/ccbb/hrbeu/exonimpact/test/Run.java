@@ -35,6 +35,9 @@ public class Run {
 			log.error(e);
 			log.error(e.getMessage());
 			
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.sqlite.SQLiteConfig;
 
 import ccbb.hrbeu.exonimpact.Feature_calculator;
 import ccbb.hrbeu.exonimpact.genestructure.Protein_structure;
@@ -32,9 +33,8 @@ public class Extractor_structure_feature {
 		return instance;
 	}
 
-	public void init(String database_path) throws SQLException, ClassNotFoundException {
-		Class.forName("org.sqlite.JDBC");
-		c = DriverManager.getConnection("jdbc:sqlite:" + database_path);
+	public void init(Connection conn) throws SQLException, ClassNotFoundException {
+		c=conn;
 	}
 
 	public Protein_structure get_structure_features(String transcript_id) throws SQLException {
@@ -67,7 +67,7 @@ public class Extractor_structure_feature {
 
 	public static void main(String[] args) {
 		try {
-			Extractor_structure_feature.get_instance().init("/Users/mengli/Documents/splicingSNP/exon_impact_new/db/refseq.db");
+			//Extractor_structure_feature.get_instance().init("/Users/mengli/Documents/splicingSNP/exon_impact_new/db/refseq.db");
 			Protein_structure strucutre_feature = Extractor_structure_feature.get_instance()
 					.get_structure_features("NM_020420");
 			
@@ -84,9 +84,6 @@ public class Extractor_structure_feature {
 			System.out.println(StringUtils.join(strucutre_feature.getDisorder().subList(82-1, 99), ","));
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

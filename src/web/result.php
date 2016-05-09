@@ -162,7 +162,7 @@
 	}
 
 
-	$error=exec("/data2/www/ExonImpact2/jdk1.8.0_51/bin/java -jar Run.jar ".$query_file_name. " configuration.txt > error1_".$query_file_name." 2>&1",$output1 );
+	$error=exec("/data2/www/ExonImpact2/jdk1.8.0_51/bin/java -cp \"Run.jar:lib_jar/*\" ccbb.hrbeu.exonimpact.test.Run ".$query_file_name. " configuration.txt > error1_".$query_file_name." 2>&1",$output1 );
 
 	//putenv("R_LIBS=C:\\Documents and Settings\\Administrator\\My Documents\\R\win-library\\3.2");
 	//putenv("R_LIBS=/home/yunliu/R/x86_64-redhat-linux-gnu-library/3.2");

@@ -50,6 +50,7 @@ public class Extractor_phylop implements Extractor {
 
 		String[] file_names = dir.list();
 		log.trace("phylop files under the directory is:" + file_names.length);
+		
 		for (String ite_file : file_names) {
 			String chr = ite_file.split("\\.")[0];
 
@@ -75,7 +76,7 @@ public class Extractor_phylop implements Extractor {
 		// TODO I don't know what the fourth parameter mean!
 		log.trace("get phylp score from: " + chr + " start: " + start + " end:" + end);
 
-		BigWigIterator iter_bigwig = chr_bbfile_map.get(chr).getBigWigIterator(chr, start, chr, end, true);
+		BigWigIterator iter_bigwig = chr_bbfile_map.get(chr).getBigWigIterator(chr, start, chr, end, false);
 
 		while (iter_bigwig.hasNext()) {
 			ret.add((double) iter_bigwig.next().getWigValue());

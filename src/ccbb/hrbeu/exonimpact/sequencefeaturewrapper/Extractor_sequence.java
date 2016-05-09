@@ -47,6 +47,7 @@ public class Extractor_sequence {
 		String rootPath = fastaPath;
 		File file = new File(rootPath);
 		String[] pathList = file.list();
+		
 		log.trace("Number of fasta files: "+pathList.length);
 		
 		try {

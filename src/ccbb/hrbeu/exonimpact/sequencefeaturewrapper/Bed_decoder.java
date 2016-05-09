@@ -33,10 +33,16 @@ public class Bed_decoder {
 		String[] line_arr=input.split("\\t");
 		
 		String chr=line_arr[0];
-		int beg=Integer.parseInt(line_arr[1]);
+		int beg=Integer.parseInt(line_arr[1])+1;
 		int end=Integer.parseInt(line_arr[2]);
 		
 		trans.addExon(new Exon(chr,beg,end) );
+		trans.setTarget_start(beg);
+		trans.setTarget_end(end);
+		trans.setChr(chr);
+		
+		trans.setTx_start(beg);
+		trans.setTx_end(end);
 		
 		return trans;
 	}

@@ -5,7 +5,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,7 +20,9 @@ import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.sqlite.SQLiteConfig;
 
+import ccbb.hrbeu.exonimpact.genestructure.Bed_region_map;
 import ccbb.hrbeu.exonimpact.proteinfeaturewrapper.Extractor_Pfam_feature;
 import ccbb.hrbeu.exonimpact.proteinfeaturewrapper.Extractor_Ptm_feature;
 import ccbb.hrbeu.exonimpact.proteinfeaturewrapper.Extractor_structure_feature;
@@ -33,6 +38,8 @@ public class ExonImpact {
 	private static ExonImpact instance = null;
 	
 	LinkedList<StringBuilder> output_str=new LinkedList<StringBuilder>();
+	
+	Connection conn=null;
 	
 	public static ExonImpact get_instance(String init_path)
 			throws ConfigurationException, ClassNotFoundException, SQLException, IOException {
@@ -59,19 +66,31 @@ public class ExonImpact {
 		config = configs.properties(new File(path_to_config));
 
 		Extractor_sequence.get_instance().init(config.getString("fasta_path") );
-		Bed_region_extractor.get_instance().build_index(config.getString("bed_path"));
+		Bed_region_extractor.get_instance().build_index(config.getString("bed_path") );
+		Bed_region_map.get_instance().init(config.getString("bed_path") );
+		
 		Extractor_phylop.get_instance().build_phylop_table(config.getString("phylop_path"));
 
+		//init database
 		String database_path = config.getString("database_path");
-		Extractor_Pfam_feature.get_instance().init(database_path);
-		Extractor_Ptm_feature.get_instance().init(database_path);
-		Extractor_structure_feature.get_instance().init(database_path);
+		
+		Class.forName("org.sqlite.JDBC");
+				
+		conn = DriverManager.getConnection("jdbc:sqlite:");
+		
+		Statement stat = conn.createStatement();
+		stat.executeUpdate("restore from "+database_path);
+
+		Extractor_Pfam_feature.get_instance().init(conn);
+		Extractor_Ptm_feature.get_instance().init(conn);
+		Extractor_structure_feature.get_instance().init(conn);
+		
 		
 		log.trace("init database!");
 		
 	}
 	
-	public void batch_run() throws ClassNotFoundException, SQLException {
+	public void batch_run() throws ClassNotFoundException, SQLException, IOException, InterruptedException {
 		for (String iter_input : input_str_arr) {
 
 				log.trace("process input: " + iter_input);
@@ -84,7 +103,7 @@ public class ExonImpact {
 		
 	}
 	
-	public void run_one(String input_event) throws ClassNotFoundException, SQLException{
+	public void run_one(String input_event) throws ClassNotFoundException, SQLException, IOException, InterruptedException{
 		
 		Exon_feature t_feature;
 		t_feature = new Exon_feature(input_event);

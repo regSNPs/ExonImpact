@@ -9,6 +9,7 @@ import ccbb.hrbeu.exonimpact.proteinfeaturewrapper.Extractor_Ptm_feature;
 import ccbb.hrbeu.exonimpact.proteinfeaturewrapper.Extractor_structure_feature;
 import ccbb.hrbeu.exonimpact.sequencefeaturewrapper.Extractor;
 import ccbb.hrbeu.exonimpact.sequencefeaturewrapper.Extractor_phylop;
+import ccbb.hrbeu.exonimpact.sequencefeaturewrapper.Extractor_phylop_online;
 import ccbb.hrbeu.exonimpact.util.Tris;
 import ccbb.hrbeu.exonimpact.genestructure.Exon;
 import ccbb.hrbeu.exonimpact.genestructure.Match_status;
@@ -105,7 +106,7 @@ public class Exon_transcript_feature {
 	public Exon_transcript_feature(String raw_input2, Transcript iter_transcript, Transcript fragment,
 			boolean is_protein_coding, Match_status is_match2, int exon_index,
 			Tris<String, Integer, Integer> exon_region_in_genome2,
-			Tris<String, Integer, Integer> exon_region_in_protein2, ArrayList<Extractor> feature_extractors2) throws ClassNotFoundException, SQLException {
+			Tris<String, Integer, Integer> exon_region_in_protein2, ArrayList<Extractor> feature_extractors2) throws ClassNotFoundException, SQLException, IOException, InterruptedException {
 		// TODO Auto-generated constructor stub
 		this.miso_frag=fragment;
 		this.transcript=iter_transcript;
@@ -162,7 +163,7 @@ public class Exon_transcript_feature {
 
 	Protein_structure protein_structures = new Protein_structure();
 	
-	void build_feature() throws SQLException, ClassNotFoundException {
+	void build_feature() throws SQLException, ClassNotFoundException, IOException, InterruptedException {
 		log.trace("Get raw features from database.");
 		Get_features();
 		
@@ -174,17 +175,21 @@ public class Exon_transcript_feature {
 		
 	}
 	
-	void Get_features() throws SQLException, ClassNotFoundException {
-		log.trace("get phylop for the whole fragment!");
-		phylop_scores_fragment=Extractor_phylop.get_instance().extract(miso_frag.getChr(),
-				miso_frag.getTx_start(),miso_frag.getTx_end() );
-				//transcript.getTx_start(), transcript.getTx_end() );
+	void Get_features() throws SQLException, ClassNotFoundException, IOException, InterruptedException {
 		
-		log.trace("get phylop for the target region!");
+		log.trace("get phylop for the whole fragment!");
+		
+		//phylop_scores_fragment=Extractor_phylop.get_instance().extract(miso_frag.getChr(),miso_frag.getTx_start(),miso_frag.getTx_end() );
+		//transcript.getTx_start(), transcript.getTx_end() );
+		//log.trace("get phylop for the target region!");
 
-		phylop_scores_target_region = Extractor_phylop.get_instance().extract(exon_region_in_genome.getValue1(),
-				exon_region_in_genome.getValue2(), exon_region_in_genome.getValue3() );
-		// phylop_scores.add(0.5);phylop_scores.add(0.2);phylop_scores.add(0.1);phylop_scores.add(0.04);
+		//phylop_scores_target_region = Extractor_phylop.get_instance().extract(exon_region_in_genome.getValue1(),exon_region_in_genome.getValue2(), exon_region_in_genome.getValue3() );
+			
+		//phylop_scores_fragment=Extractor_phylop_online.extract(miso_frag.getChr(),	miso_frag.getTx_start(),miso_frag.getTx_end());
+		
+		phylop_scores_target_region=Extractor_phylop_online.extract(exon_region_in_genome.getValue1(),	exon_region_in_genome.getValue2(), exon_region_in_genome.getValue3());
+		log.trace("got phylop for the target region!");
+		
 		
 		protein_structures = Extractor_structure_feature.get_instance().get_structure_features(transcript_id);
 
@@ -209,6 +214,7 @@ public class Exon_transcript_feature {
 			log.error("The transcirpt's protein coding region for ss has problem :"+transcript_id );
 			return;
 		}
+		
 		// add secondary structure features
 		features.addAll(Feature_calculator.calculator_ss(protein_structures.getBeta_sheet(),
 				protein_structures.getRandom_coil(), protein_structures.getAlpha_helix(),
@@ -389,11 +395,11 @@ public class Exon_transcript_feature {
 		proteinNode.appendChild(pfamsNode);
 		
 		
-		ptm_sites.add(new Ptm_site(this.transcript_id,"test",89,"a") );
+		//ptm_sites.add(new Ptm_site(this.transcript_id,"test",89,"a") );
 		
 		Element ptmsNode = doc.createElement("ptms");
 		for (Ptm_site itePtm : ptm_sites) {
-
+			
 			Element ptmNode = doc.createElement("ptm");
 			// p.setTextContent(pfamInfo.get(j));
 			ptmNode.setAttribute("start", "" + itePtm.getPosition() );
@@ -510,7 +516,7 @@ public class Exon_transcript_feature {
 		line.append(is_match+",");
 
 		
-		line.append(this.transcript_id+"_"+exon_index+",");
+		line.append(this.transcript_id+":"+exon_index+",");
 
 		//FileUtils.writeStringToFile(new File(output_str), is_protein.toString(), true);
 		//FileUtils.writeStringToFile(new File(output_str), ",", true);

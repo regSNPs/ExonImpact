@@ -71,6 +71,15 @@ public class Extractor_phylop_online {
 		return ret;
 	}
 	
+	public static ArrayList<Double> extract(String chr,int beg,int end) throws IOException, InterruptedException{
+		if(end-beg>100000){
+			return new ArrayList<Double>();
+		}
+		
+		return extract(chr+":"+beg+"-"+end);
+		
+	}
+	
 	public static void main(String[] args){
 		 ArrayList<Double> re;
 		try {

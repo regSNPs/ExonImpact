@@ -13,12 +13,15 @@ public class Test_all_1 {
 		try {
 			
 			ExonImpact exon_impact = ExonImpact.get_instance("configuration.txt");
-			exon_impact.read_from_file("/Users/mengli/Documents/splicingSNP/exon_impact_new/test3.txt");
+			exon_impact.read_from_file("/Users/mengli/Documents/splicingSNP/exon_impact_new/exon_bed.tsv");
 			exon_impact.batch_run();
-			exon_impact.output_to("/Users/mengli/Documents/splicingSNP/exon_impact_new/test_output_3.csv");
+			exon_impact.output_to("/Users/mengli/Documents/splicingSNP/exon_impact_new/test_output_4.csv");
 			//exon_impact.build_xml("E:\\limeng\\splicingSNP\\exon_impact_new\\test_1");
 			
 		} catch (ClassNotFoundException | ConfigurationException | SQLException | IOException  e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -39,6 +42,9 @@ public class Test_all_1 {
 		} catch (ClassNotFoundException | ConfigurationException | SQLException | IOException  e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 	}
@@ -55,6 +61,9 @@ public class Test_all_1 {
 			//exon_impact.build_xml("E:\\limeng\\splicingSNP\\exon_impact_new\\test_1");
 			
 		} catch (ClassNotFoundException | ConfigurationException | SQLException | IOException  e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -75,6 +84,9 @@ public class Test_all_1 {
 		} catch (ClassNotFoundException | ConfigurationException | SQLException | IOException  e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 	}
@@ -90,6 +102,9 @@ public class Test_all_1 {
 			//exon_impact.build_xml("E:\\limeng\\splicingSNP\\exon_impact_new\\test_1");
 			
 		} catch (ClassNotFoundException | ConfigurationException | SQLException | IOException  e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

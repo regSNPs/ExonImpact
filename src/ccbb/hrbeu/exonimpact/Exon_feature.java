@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 
+import ccbb.hrbeu.exonimpact.genestructure.Bed_region_map;
 import ccbb.hrbeu.exonimpact.genestructure.Exon;
 import ccbb.hrbeu.exonimpact.genestructure.Match_status;
 import ccbb.hrbeu.exonimpact.genestructure.Transcript;
@@ -26,7 +26,7 @@ public class Exon_feature {
 
 	Logger log = Logger.getLogger(Exon_feature.class);
 
-	public Exon_feature(String input) throws SQLException, ClassNotFoundException {
+	public Exon_feature(String input) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
 		raw_input = input;
 		build_feautre();
 	}
@@ -44,11 +44,40 @@ public class Exon_feature {
 	String Transcript_id = "";
 	String Exon_id = "";
 	
-	public void build_feautre() throws SQLException, ClassNotFoundException {
+	public void build_feautre() throws SQLException, ClassNotFoundException, IOException, InterruptedException {
 		
 		Transcript fragment =null;
-		
-		if(Bed_decoder.is_bed(raw_input) ){
+		if(Bed_region_map.is_transcript_id(raw_input) ){
+			fragment=new Transcript();
+			
+			String[] line_arr=raw_input.split(":");
+			
+			String t_transcript_id=line_arr[0];
+			int exon_index=Integer.parseInt(line_arr[1]);
+Tris<String, Integer, Integer> t_transcript_region = Bed_region_map.get_instance().name_region_map.get(t_transcript_id);
+			
+			if(t_transcript_region==null){
+				return;
+			}
+			
+			Tris<String, Integer, Integer> exon_region = Bed_region_extractor.get_instance().
+			get_transcript_exon_region(t_transcript_region.getValue1(),t_transcript_region.getValue2(),
+					t_transcript_region.getValue3(), t_transcript_id, exon_index,true);
+			
+			if(exon_region.getValue2()==-1){
+				log.error("error input"+raw_input+" don't have annotations");
+			}
+			
+			fragment.setChr(t_transcript_region.getValue1() );
+			fragment.setTranscript_id(t_transcript_id);
+			fragment.setTx_start(t_transcript_region.getValue2() );
+			fragment.setTx_end(t_transcript_region.getValue3() );
+			
+			fragment.setTarget_start(exon_region.getValue2() );
+			fragment.setTarget_end(exon_region.getValue3() );
+			
+			
+		}else if(Bed_decoder.is_bed(raw_input) ){
 			fragment = Bed_decoder.get_instance().get_transcript(raw_input);
 			
 		}else if(Miso_decoder.tellASType(raw_input)!=ASTYPE.UNKNOWN){
@@ -65,7 +94,13 @@ public class Exon_feature {
 		log.trace("number of transcripts mapped for the input is: " + mapped_transcripts.size() + " ");
 
 		for (Transcript iter_transcript : mapped_transcripts) {
-
+			if( (!fragment.getTranscript_id().equals("") ) &&
+					!(fragment.getTranscript_id().equals(iter_transcript.getTranscript_id()) ) ){
+				
+				continue;
+			}
+			
+			
 			log.trace("The mapped transcript is: " + iter_transcript.getTranscript_id());
 			// if doesn��t match, it should return a pair of <0,0>
 			exon_region_in_genome.setValue1(fragment.getChr());
@@ -89,8 +124,8 @@ public class Exon_feature {
 			exon_transcript_features.add(new Exon_transcript_feature(raw_input, iter_transcript,fragment,
 					iter_transcript.isIs_protein_coding(), is_match,is_match.getExon_index(), exon_region_in_genome, exon_region_in_protein,
 					Feature_extractors));
-
 		}
+		
 	}
 
 	private Match_status miso_match(Transcript fragment, Transcript transcript) {
@@ -112,13 +147,17 @@ public class Exon_feature {
 			int exon_start = ite_exon.getExonBegCoorPos();
 			int exon_end = ite_exon.getExonEndCoorPos();
 			String one_str=chr+":"+exon_start+"-"+exon_end;
-
-			all_exon.put(one_str,i++);
+			if(transcript.getStrand().equals(Strand.POSITIVE) ){
+				all_exon.put(one_str,++i);
+			}else{
+				all_exon.put(one_str,transcript.getExons().size()-i );
+				i++;
+			}
+			
 		}
 		
 		if(!all_exon.containsKey(target_str)){
 			//return Match_status.not_match;
-
 			return Match_status.not_match;
 		}
 		
@@ -179,8 +218,9 @@ public class Exon_feature {
 		
 		protein_len/=3;start_len/=3;end_len/=3;
 		
-
-		log.trace("protein length info= "+protein_len+"\t"+start_len+"\t"+end_len);
+		int start=-1,end=-1;
+		
+		//log.trace("protein length info= "+protein_len+" start="+start_len+" end="+end_len);
 		
 		if (trans.getStrand().equals(Strand.NEGATIVE)) {
 			//a stop codon in the end of the protein.
@@ -188,11 +228,16 @@ public class Exon_feature {
 			start_len-=1;
 			end_len-=1;
 			
-			return new Tris<String, Integer, Integer>(trans.getChr(), (int)Math.floor(protein_len - end_len +1),
-					(int)Math.ceil(protein_len - start_len+1) );
+	start=Math.floor(protein_len - end_len +1)>0?(int)Math.floor(protein_len - end_len +1):1;
+	end=Math.ceil(protein_len - start_len+1)<=protein_len?(int)Math.ceil(protein_len - start_len+1):(int)protein_len;
+			
+			return new Tris<String, Integer, Integer>(trans.getChr(), start,end );
 		}
-
-		return new Tris<String, Integer, Integer>(trans.getChr(), (int)Math.floor(start_len), (int)Math.ceil(end_len) );
+		
+		start=Math.floor(start_len)>0?(int)Math.floor(start_len):1;
+		end=Math.ceil(end_len)<=protein_len?(int)Math.ceil(end_len):(int)protein_len;
+		
+		return new Tris<String, Integer, Integer>(trans.getChr(), start, end );
 		
 		
 	}

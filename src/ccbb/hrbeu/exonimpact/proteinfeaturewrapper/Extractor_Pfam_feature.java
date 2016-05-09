@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.sqlite.SQLiteConfig;
+
 import ccbb.hrbeu.exonimpact.genestructure.Pfam_domain;
 
 public class Extractor_Pfam_feature {
@@ -29,10 +31,8 @@ public class Extractor_Pfam_feature {
 
 	}
 
-	public void init(String database_path) throws SQLException, ClassNotFoundException {
-		Class.forName("org.sqlite.JDBC");
-		c = DriverManager.getConnection("jdbc:sqlite:" + database_path);
-		// refseq.db
+	public void init(Connection conn) throws SQLException, ClassNotFoundException {
+		c=conn;
 	}
 
 	public ArrayList<Pfam_domain> get_pfam_domains(String transcript_id) throws SQLException {
@@ -58,7 +58,8 @@ public class Extractor_Pfam_feature {
 	
 	public static void main(String[] args) {
 		try {
-			Extractor_Pfam_feature.get_instance().init("E:\\limeng\\splicingSNP\\exon_impact_new\\db\\refseq.db");
+			
+			//Extractor_Pfam_feature.get_instance().init("E:\\limeng\\splicingSNP\\exon_impact_new\\db\\refseq.db");
 			ArrayList<Pfam_domain> pfam_domains = Extractor_Pfam_feature.get_instance().get_pfam_domains("NM_020420");
 
 			for (Pfam_domain ite_domain : pfam_domains) {

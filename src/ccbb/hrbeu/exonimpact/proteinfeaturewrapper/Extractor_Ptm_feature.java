@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.sqlite.SQLiteConfig;
+
 import ccbb.hrbeu.exonimpact.genestructure.Ptm_site;
 
 public class Extractor_Ptm_feature {
@@ -25,9 +27,8 @@ public class Extractor_Ptm_feature {
 		return instance;
 	}
 
-	public void init(String database_path) throws SQLException, ClassNotFoundException {
-		Class.forName("org.sqlite.JDBC");
-		c = DriverManager.getConnection("jdbc:sqlite:" + database_path);
+	public void init(Connection conn) throws SQLException, ClassNotFoundException {
+		c=conn;
 	}
 
 	public ArrayList<Ptm_site> get_ptm_sites(String transcript_id) throws SQLException {
@@ -50,7 +51,7 @@ public class Extractor_Ptm_feature {
 
 	public static void main(String[] args) {
 		try {
-			Extractor_Ptm_feature.get_instance().init("E:\\limeng\\splicingSNP\\exon_impact_new\\db\\refseq.db");
+			//Extractor_Ptm_feature.get_instance().init("E:\\limeng\\splicingSNP\\exon_impact_new\\db\\refseq.db");
 			ArrayList<Ptm_site> ptm_sites = Extractor_Ptm_feature.get_instance().get_ptm_sites("NM_020420");
 
 			for (Ptm_site ite_site : ptm_sites) {
@@ -59,9 +60,6 @@ public class Extractor_Ptm_feature {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

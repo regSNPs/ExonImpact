@@ -129,7 +129,7 @@ public class Feature_calculator {
 		
 		for (; start < end; start++) {
 			Double val = arr.get(start);
-			log.trace(val);
+			//log.trace(val);
 			
 			ave_disorder += val;
 
@@ -331,7 +331,7 @@ public class Feature_calculator {
 
 		double normalized_ptm = number_of_ptms / (double) (end - start + 1)*100;
 		ret.add(normalized_ptm);
-
+		
 		return ret;
 	}
 	

@@ -28,6 +28,9 @@ public class Test_run_on_2 {
 			e.printStackTrace();
 			log.error(e);
 			log.error(e.getMessage());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	

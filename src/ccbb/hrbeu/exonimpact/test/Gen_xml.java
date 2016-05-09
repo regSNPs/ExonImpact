@@ -26,6 +26,9 @@ public class Gen_xml {
 		} catch (ClassNotFoundException | ConfigurationException | SQLException | IOException | ParserConfigurationException  e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 	}

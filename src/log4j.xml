@@ -37,11 +37,6 @@
                 <appender-ref ref="file" />
         </logger>
 		
-        <logger name="ccbb">
-                <level value="ERROR"/>
-                <appender-ref ref="fileerror" />
-        </logger>
-		
 	<root>
 		<level value="DEBUG" />
 		<appender-ref ref="console" />
