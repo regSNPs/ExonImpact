@@ -9,7 +9,6 @@ import ccbb.hrbeu.exonimpact.proteinfeaturewrapper.Extractor_Ptm_feature;
 import ccbb.hrbeu.exonimpact.proteinfeaturewrapper.Extractor_structure_feature;
 import ccbb.hrbeu.exonimpact.sequencefeaturewrapper.Extractor;
 import ccbb.hrbeu.exonimpact.sequencefeaturewrapper.Extractor_phylop;
-import ccbb.hrbeu.exonimpact.sequencefeaturewrapper.Extractor_phylop_online;
 import ccbb.hrbeu.exonimpact.util.Tris;
 import ccbb.hrbeu.exonimpact.genestructure.Exon;
 import ccbb.hrbeu.exonimpact.genestructure.Match_status;
@@ -183,11 +182,11 @@ public class Exon_transcript_feature {
 		//transcript.getTx_start(), transcript.getTx_end() );
 		//log.trace("get phylop for the target region!");
 
-		//phylop_scores_target_region = Extractor_phylop.get_instance().extract(exon_region_in_genome.getValue1(),exon_region_in_genome.getValue2(), exon_region_in_genome.getValue3() );
+		phylop_scores_target_region = Extractor_phylop.get_instance().extract(exon_region_in_genome.getValue1(),exon_region_in_genome.getValue2(), exon_region_in_genome.getValue3() );
 			
 		//phylop_scores_fragment=Extractor_phylop_online.extract(miso_frag.getChr(),	miso_frag.getTx_start(),miso_frag.getTx_end());
 		
-		phylop_scores_target_region=Extractor_phylop_online.extract(exon_region_in_genome.getValue1(),	exon_region_in_genome.getValue2(), exon_region_in_genome.getValue3());
+		//phylop_scores_target_region=Extractor_phylop_online.extract(exon_region_in_genome.getValue1(),	exon_region_in_genome.getValue2(), exon_region_in_genome.getValue3());
 		log.trace("got phylop for the target region!");
 		
 		
@@ -537,6 +536,8 @@ public class Exon_transcript_feature {
 			line.append(ite_feature_val+",");
 
 		}
+		
+		line.substring(0, line.length()-2);
 		//FileUtils.writeStringToFile(new File(output_str), "\n", true);
 		output_str.add(line);
 		

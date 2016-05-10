@@ -20,7 +20,6 @@ import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.sqlite.SQLiteConfig;
 
 import ccbb.hrbeu.exonimpact.genestructure.Bed_region_map;
 import ccbb.hrbeu.exonimpact.proteinfeaturewrapper.Extractor_Pfam_feature;
@@ -91,13 +90,15 @@ public class ExonImpact {
 	}
 	
 	public void batch_run() throws ClassNotFoundException, SQLException, IOException, InterruptedException {
+		int  input_count=0;
+		
 		for (String iter_input : input_str_arr) {
-
-				log.trace("process input: " + iter_input);
-				Exon_feature t_feature;
-				t_feature = new Exon_feature(iter_input);
-
-				exon_features.add(t_feature);
+				
+			log.trace("process input: " + iter_input+" number_index is: "+input_count++);
+			Exon_feature t_feature;
+			t_feature = new Exon_feature(iter_input);
+			
+			exon_features.add(t_feature);
 
 		}
 		

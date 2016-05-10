@@ -54,13 +54,18 @@ public class Exon_feature {
 			
 			String t_transcript_id=line_arr[0];
 			int exon_index=Integer.parseInt(line_arr[1]);
+			if(exon_index<=0){
+				log.error("The input is: "+raw_input+" , probelm!!");
+				
+			}
+			
 Tris<String, Integer, Integer> t_transcript_region = Bed_region_map.get_instance().name_region_map.get(t_transcript_id);
 			
 			if(t_transcript_region==null){
 				return;
 			}
 			
-			Tris<String, Integer, Integer> exon_region = Bed_region_extractor.get_instance().
+Tris<String, Integer, Integer> exon_region = Bed_region_extractor.get_instance().
 			get_transcript_exon_region(t_transcript_region.getValue1(),t_transcript_region.getValue2(),
 					t_transcript_region.getValue3(), t_transcript_id, exon_index,true);
 			
@@ -237,7 +242,7 @@ Tris<String, Integer, Integer> t_transcript_region = Bed_region_map.get_instance
 		start=Math.floor(start_len)>0?(int)Math.floor(start_len):1;
 		end=Math.ceil(end_len)<=protein_len?(int)Math.ceil(end_len):(int)protein_len;
 		
-		return new Tris<String, Integer, Integer>(trans.getChr(), start, end );
+		return new Tris<String, Integer, Integer>(trans.getTranscript_id(), start, end );
 		
 		
 	}

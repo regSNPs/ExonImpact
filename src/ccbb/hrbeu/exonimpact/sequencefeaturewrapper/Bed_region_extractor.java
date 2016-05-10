@@ -82,12 +82,15 @@ public class Bed_region_extractor implements Extractor {
 					
 					t.setIs_protein_coding(cur_iter.isIs_protein_coding());
 					
-					if(only_as_exon&&(exon_index==1 || exon_index==t.getExons().size() ) ) {
+					//the equal here is to remove the first and last exon.
+					if(only_as_exon&&(exon_index<=1 || exon_index>=t.getExons().size() ) ) {
 						return exon_region;
 					}
 					
 					if(cur_iter.getStrand().equals(Strand.NEGATIVE))
-						exon_index=t.getExons().size()-exon_index;
+						exon_index=t.getExons().size()-exon_index+1;
+					
+					
 					
 					int exon_beg=t.getExons().get(exon_index-1).getExonBegCoorPos();
 					int exon_end=t.getExons().get(exon_index-1).getExonEndCoorPos();

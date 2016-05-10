@@ -153,7 +153,8 @@ public class Feature_calculator {
 
 			if (val < 0.5 && start!=0 && arr.get(start - 1) > 0.5) {
 				time_switch++;
-				disorder_regions_length.add(cur_disorder_region_len);
+				if(cur_disorder_region_len>0)
+					disorder_regions_length.add(cur_disorder_region_len);
 
 				cur_disorder_region_len = 0;
 				cur_strucutre_region_len = 1;
@@ -162,8 +163,9 @@ public class Feature_calculator {
 
 			if (val > 0.5 &&start!=0 && arr.get(start - 1) < 0.5) {
 				time_switch++;
-
-				structure_regions_length.add(cur_strucutre_region_len);
+				if(cur_strucutre_region_len>0)
+					structure_regions_length.add(cur_strucutre_region_len);
+				
 				cur_disorder_region_len = 0;
 				cur_strucutre_region_len = 1;
 			}
