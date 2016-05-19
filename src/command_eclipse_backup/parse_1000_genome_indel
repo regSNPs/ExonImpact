@@ -1,0 +1,17 @@
+###parse 1000 genome indel
+
+annotate_variation.pl -buildver hg19 -downdb -webfrom annovar refGene humandb/
+
+annotate_variation.pl -buildver hg19 -downdb -webfrom annovar ensGene humandb/
+
+vcftools --gzvcf ALL.wgs.phase3_shapeit2_mvncall_integrated_v5a.20130502.sites.vcf.gz 
+ --keep-only-indels --recode --recode-INFO-all --out ALL.wgs.phase3_shapeit2_mvncall_integrated_v5a.20130502.sites.indel
+
+perl table_annovar.pl /home/limeng/splicingSNP/annotation/1000genome/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5a.20130502.sites.indel.vcf.recode.vcf 
+ humandb/ -buildver hg19 -out 1000_genome_indel -remove -protocol ensGene -operation g -nastring . -vcfinput
+ 
+vcftools --vcf 1000_genome_indel.hg19_multianno.vcf --get-INFO AAChange.ensGene
+ 
+awk '{print $5}' out.INFO | sort -u > aa_change_uniq
+ 
+ 

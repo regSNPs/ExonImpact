@@ -32,7 +32,7 @@ public class Transcript {
 
 	boolean is_protein_coding = false;
 	
-	ASTYPE as_type=null;
+	ASTYPE as_type=ASTYPE.UNKNOWN;
 
 	public Transcript() {
 

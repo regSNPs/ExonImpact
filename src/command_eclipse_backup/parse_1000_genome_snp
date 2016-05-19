@@ -1,0 +1,15 @@
+###parse 1000 Genome SNP, we got coding variants(includ synonymous and nonsynonymous) an in the 20bp splicing region.
+tabix -h ALL.wgs.phase3_shapeit2_mvncall_integrated_v5a.20130502.sites.vcf.gz -B splicingRegionBed20.bed >
+ 1000genome.variats.splicingjunction20.vcf
+ 
+grep -e 'AF=0\.[1-9]' -e 'AF=0\.0[5-9]' 1000genome.snp.indel.splicingjunction20.vcf >
+ 1000genome.snp.indel.splicingjunction20.maf5.vcf
+ 
+vcftools --remove-indels --recode --recode-INFO-all --vcf 1000genome.snp.indel.splicingjunction20.maf5.vcf --out 1000genome.snp.splicingjunction20.maf5
+
+perl table_annovar.pl 1000genome.snp.splicingjunction20.maf5.recode.vcf humandb/ -buildver hg19 -out myanno -remove -protocol ensGene -operation g -nastring . -vcfinput
+
+vcftools --remove-indels  --vcf 1000_genome.splicingjunction20.maf5.hg19_multianno.vcf --get-INFO AAChange.ensGene --out 1000_genome.splicingjunction20.maf5.hg19_multianno
+
+awk '{printf("chr%s:%s-%s\n",$1,$2,$2)}' 1000_genome.splicingjunction20.maf5.hg19_multianno.INFO > 1000_genome.splicingjunction20.maf5.hg19_multianno.spanr
+

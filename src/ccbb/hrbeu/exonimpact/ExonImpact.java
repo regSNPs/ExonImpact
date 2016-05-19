@@ -104,6 +104,39 @@ public class ExonImpact {
 		
 	}
 	
+	public void batch_run(String output_file_name) throws ClassNotFoundException, SQLException, IOException, InterruptedException {
+		StringBuilder line=new StringBuilder();
+		
+		for(int i=0;i<Exon_transcript_feature.feature_names2.size();++i){
+			//FileUtils.writeStringToFile(new File(file_name), Exon_transcript_feature.feature_names2.get(i),true) ;
+			line.append(Exon_transcript_feature.feature_names2.get(i) );
+			
+			if(i!=Exon_transcript_feature.feature_names2.size()-1)
+				//FileUtils.writeStringToFile(new File(file_name), ",", true);
+				line.append(",");
+		}
+		
+		line.append("\n");
+		
+		FileUtils.write(new File(output_file_name), line.toString(), true);
+		
+		int  input_count=0;
+		Exon_feature t_feature;
+
+		for (String iter_input : input_str_arr) {
+			LinkedList<StringBuilder> one_trans_output_str = new LinkedList<StringBuilder>();
+			
+			log.trace("process input: " + iter_input+" number_index is: "+input_count++);
+			t_feature = new Exon_feature(iter_input);
+			t_feature.output(one_trans_output_str);
+			
+			FileUtils.writeLines(new File(output_file_name), one_trans_output_str, true);
+			
+			//exon_features.add(t_feature);
+		}
+		
+	}
+	
 	public void run_one(String input_event) throws ClassNotFoundException, SQLException, IOException, InterruptedException{
 		
 		Exon_feature t_feature;

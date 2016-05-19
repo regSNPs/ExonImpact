@@ -1,0 +1,22 @@
+###parse 1000 Genome SNP, we got coding variants(includ synonymous and nonsynonymous) an in the 20bp splicing region.
+
+#get the variants in the splicing site +-20bp region.
+tabix -h ALL.wgs.phase3_shapeit2_mvncall_integrated_v5a.20130502.sites.vcf.gz -B splicingRegionBed20.bed >
+ 1000genome.variats.splicingjunction20.vcf
+
+#only keep the variants which has MAF>=0.05
+grep -e 'AF=0\.[1-9]' -e 'AF=0\.0[5-9]' 1000genome.snp.indel.splicingjunction20.vcf >
+ 1000genome.snp.indel.splicingjunction20.maf5.vcf
+ 
+#only keep the SNPs, remove the indels.
+vcftools --remove-indels --recode --recode-INFO-all --vcf 1000genome.snp.indel.splicingjunction20.maf5.vcf --out 1000genome.snp.splicingjunction20.maf5
+
+#annotatte the SNPs using annovar with ensembl annotation.
+perl table_annovar.pl 1000genome.snp.splicingjunction20.maf5.recode.vcf humandb/ -buildver hg19 -out myanno -remove -protocol ensGene -operation g -nastring . -vcfinput
+
+#get the info column from the VCF file which only contain the SNPs which MAF>=0.05 and in +-20bp region around the splicing site.
+vcftools --vcf 1000_genome.splicingjunction20.maf5.hg19_multianno.vcf --get-INFO AAChange.ensGene --out 1000_genome.splicingjunction20.maf5.hg19_multianno
+
+#extract the SNP's position to run spanr.
+awk '{printf("chr%s:%s-%s\n",$1,$2,$2)}' 1000_genome.splicingjunction20.maf5.hg19_multianno.INFO > 1000_genome.splicingjunction20.maf5.hg19_multianno.spanr
+

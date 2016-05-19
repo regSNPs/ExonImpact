@@ -1,0 +1,5 @@
+###parse hgmd , annotate hgmd database.
+perl table_annovar.pl hgmd_for_annovar.tsv humandb/ 
+ -buildver hg19 -out hgmd_splicing -remove -protocol ensGene -operation g -nastring .
+ 
+ 

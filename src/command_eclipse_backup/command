@@ -1,0 +1,26 @@
+###run spanr
+
+for i in `cat clinvar_intron_benign_spanr`
+do
+  `tabix spidex_public_noncommercial_v1_0.tab.gz $i >> clinvar_intron_benign_dpsi`
+
+done;
+
+
+###do for loop
+
+for i in `ls`;do ``; done;
+
+
+ ###run command
+query_file_name=${1};
+`/data2/www/ExonImpact2/jdk1.8.0_51/bin/java -cp "Run.jar:lib_jar/*" ccbb.hrbeu.exonimpact.test.Run $query_file_name configuration.txt >  "error_$query_file_name" 2>&1`;
+
+putenv("R_LIBS=/home/limeng/R/x86_64-redhat-linux-gnu-library/3.1");
+`/usr/local/bin/Rscript R/predict.r usr_input/$query_file_name > "error2_$query_file_name 2>&1`
+
+###linux find and copy
+find predout -name '*.spXout' -exec cp {} spx/  \;
+
+
+

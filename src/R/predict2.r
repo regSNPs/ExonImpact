@@ -16,17 +16,9 @@ despData<-despData[,1:38]
 
 despData_noNa<-despData[!is.na(despData[,ncol(despData)]),,drop=FALSE];
 
-despData_noNa_filter<-despData_noNa[,,drop=FALSE];
+despData_noNa_filter<-despData_noNa[order(despData_noNa[,"is_match"],decreasing=TRUE),,drop=FALSE];
 
-despData_noNa_filter_one_trans<-ddply(despData_noNa_filter,.(raw_input),function(x){
-	if(is.element("whole_match",x[,"is_match"]) ){
-		y<-subset(x,is_match=="whole_match");
-		return(y[1,-1]);
-	}else{
-		return(x[1,-1]);
-	}
-	
-});
+despData_noNa_filter_one_trans<-despData_noNa_filter[!duplicated(despData_noNa_filter[]),];
 
 
 disease_probability<-predict(modelrandomforestAll,despData_noNa_filter_one_trans,type="prob")[,1];

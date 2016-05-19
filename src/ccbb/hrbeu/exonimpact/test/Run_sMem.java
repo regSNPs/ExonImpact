@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 import ccbb.hrbeu.exonimpact.ExonImpact;
 
-public class Run {
+public class Run_sMem {
 	static Logger log=Logger.getLogger(Run.class);
 	
 	public static void test(String input,String path_to_config) {
@@ -24,13 +24,11 @@ public class Run {
 
 			
 			exon_impact.read_from_file(input);
-			exon_impact.batch_run();
+			//exon_impact.batch_run();
 			
 			output_name=new File(input).getName();
+			exon_impact.batch_run("usr_input/"+output_name+"_features.csv");
 			
-			//exon_impact.output_to("usr_input/"+output_name);
-			//exon_impact.call_R("usr_input/"+output_name);
-			//exon_impact.build_xml("E:\\limeng\\splicingSNP\\exon_impact_new\\test_1");
 			
 		} catch (ClassNotFoundException | ConfigurationException | SQLException | IOException   e) {
 			// TODO Auto-generated catch block
@@ -43,20 +41,14 @@ public class Run {
 			e.printStackTrace();
 			log.error(e);
 		}finally{
-			try {
-				exon_impact.output_to("usr_input/"+output_name);
-				
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				log.error(e1);
-				e1.printStackTrace();
-			}
+			
 		}
 		
 	}
 	
 	public static void main(String[] args) {
-		Run.test(args[0],args[1]);
+		Run_sMem.test(args[0],args[1]);
+		//Run_sMem.test("/Users/mengli/Documents/splicingSNP_new/data/build_db/miso_test/se", "configuration.txt");
 		
 		//Run.test("E:\\limeng\\splicingSNP\\exon_impact_new\\test_1.txt");
 	}

@@ -75,7 +75,10 @@ public class Extractor_phylop implements Extractor {
 
 		// TODO I don't know what the fourth parameter mean!
 		log.trace("get phylp score from: " + chr + " start: " + start + " end:" + end);
-
+		if(!chr_bbfile_map.containsKey(chr)){
+			return ret;
+		}
+		
 		BigWigIterator iter_bigwig = chr_bbfile_map.get(chr).getBigWigIterator(chr, start, chr, end, false);
 
 		while (iter_bigwig.hasNext()) {
