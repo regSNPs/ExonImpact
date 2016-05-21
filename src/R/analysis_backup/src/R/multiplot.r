@@ -1,3 +1,4 @@
+
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   require(grid)
   
@@ -16,7 +17,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   }
   
   if (numPlots==1) {
-    print(plots[[1]])
+    print(plots[[1]]);
     
   } else {
     # Set up the page

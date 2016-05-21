@@ -1,6 +1,6 @@
 library(ggplot2);
-library(dplyr);
 library(plyr)
+library(dplyr);
 library(readr)
 library(reshape2);
 
@@ -10,8 +10,8 @@ attr<-read_csv("data/GTEx/Brain_samplesAttributes_1.csv",col_names = F);
 attr_data<-as.data.frame(attr,stringAsFactors=F); 
 donors<-substr(attr_data[,2],1,9)
 donorNumber<-length(unique(donors));
-cat( paste0("donors number: ",donorNumber,"\n"),file="result/log.txt",append=TRUE ); 
 
+cat( paste0("donors number: ",donorNumber,"\n"),file="result/log.txt",append=TRUE ); 
 cat( paste0("brain region number: ",length(unique(attr_data[,15])), "\n"),file="result/log.txt",append=TRUE );
 
 result<-read.table("data/GTEx/region_miso_event_result.tsv",sep="\t",header=T,as.is=T); 
@@ -95,8 +95,6 @@ colnames(resultPermelt)<-c("labelPsi","allCount","variable","value","count");
 
 #resultPermelt[,"variable"]<-
 cbPalette1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-# The palette with black:
 cbPalette2 <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 p4<-ggplot(resultPermelt,aes(x="",y=value,fill=labelPsi) )+#,fill=variable

@@ -5,89 +5,38 @@ library(grid);
 
 setwd("/Users/mengli/Documents/splicingSNP_new/");
 source("src/R/multiplot.r");
+source("src/R/get_roc_data.r");
 
 nLine<-as.integer(nrow(all_data_filter)/3*2);
 
 all_data_train<-all_data_filter[1:nLine,];
 all_data_test<-all_data_filter[(nLine+1):nrow(all_data_filter),];
 
-#all_data_trainSelect<-all_data_train[,c("label",selectFeatures )];
-
-#for refseq
+#build random forest model.
 modelrandomforest<-randomForest(formula=label~.,
                                 data=all_data_train,
                                 ntree=100,proximity=TRUE,
                                 replace=FALSE,nodesize=19,mtry=12);
 
 predictValues<-predict(modelrandomforest,all_data_test,type="prob")[,1];
+names(predictValues)<-all_data_test[,"label"];
 
-tprFun<-function(x){
-  t<-sum(predictValues[all_data_test$label=="HGMD"]>x)/sum(all_data_test$label=="HGMD");
-  return(t);
-}
+cutoffs <- get_roc_data(predictValues,"independent test","HGMD","NEUTRAL");
+auc_value<-cutoffs[1,"auc"];
 
-fprFun<-function(x){
-  t<-sum(predictValues[all_data_test$label=="NEUTRAL"]>x)/sum(all_data_test$label=="NEUTRAL");
-  return(t);
-}
-
-f1Fun<-function(x){
-  tp<-sum(predictValues[all_data_test$label=="HGMD"]>x );   #tp
-  fp<-sum(predictValues[all_data_test$label=="NEUTRAL"]>x); #fp
-  fn<-sum(predictValues[all_data_test$label=="HGMD"]<x);    #fn
-  f1<-(2*tp)/(2*tp+fp+fn);
-  
-  return(f1);
-}
-
-fdrFun<-function(x){
-  t<-sum(predictValues[all_data_test$label=="NEUTRAL"]>x)/sum(predictValues>x); #fdr
-}
-
-mccFun<-function(x){
-  tp<-sum(predictValues[all_data_test$label=="HGMD"]>x );      #tp
-  tn<-sum(predictValues[all_data_test$label=="NEUTRAL"]<x );   #tp
-  fp<-sum(predictValues[all_data_test$label=="NEUTRAL"]>x);    #fp
-  fn<-sum(predictValues[all_data_test$label=="HGMD"]<x);       #fn
-  #print( paste0(tp," ",tn," ",fp," ",fn,"\n") );
-  
-  mcc<-( (tp*tn)-(fp*fn) )/( sqrt(tp+fp)*sqrt(tp+fn)*sqrt(tn+fp)*sqrt(tn+fn) ); 
-  return(mcc);
-}
-
-thresholds<-seq(-0,1.1,0.001);
-
-tpr<-sapply(thresholds,tprFun);
-fpr<-sapply(thresholds,fprFun);
-f1<- sapply(thresholds,f1Fun);
-fdr<-sapply(thresholds,fdrFun);
-mcc<-sapply(thresholds,mccFun);
-
-auc_value<-mean(sample(predictValues[all_data_test$label=="HGMD"],1000000,replace=T) >
-                 sample(predictValues[all_data_test$label=="NEUTRAL"],1000000,replace=T));
-
-#p1<-ggplot()+geom_line(aes(x=fpr,y=tpr))+
-p1<-ggplot( )+geom_ribbon(aes(x=fpr,ymin=0,ymax=tpr),fill="gray66")+ #geom_area(fill="green")+
-  
-  #ggtitle(paste0("A  (AUC=",auc_value,")"))+
+p1<-ggplot(cutoffs)+geom_ribbon(aes(x=fpr,ymin=0,ymax=tpr),fill="gray66")+ #geom_area(fill="green")+
   xlab("Fasle Positive Rate")+ylab("True Positive Rate")+theme_classic()+theme(text=element_text(size=7))+
-  #ylim(0,1.2)+
   geom_text(aes(x=0.1,y=1.2), colour = "black", fontface = "bold",label="a  ",size = 4)+
   #geom_text(aes(x=0.5,y=1.2), colour = "black",size = 4,label=paste0("Independent test (AUC=",signif(auc_value,3),")" ) );
-ggtitle(paste0("Independent test (AUC=",signif(auc_value,3),")" ) );
-#,xlab="False Positive Rate",ylab="True Positive Rate",type="l",xlim=c(0,1),ylim=c(0,1) );
+  ggtitle(paste0("Independent test (AUC=",signif(auc_value,3),")" ) );
 
-#aucValue<-troc$auc;
-
-cutoffs <- data.frame(cut=thresholds, tpr=tpr, fpr=fpr,f1=f1,mcc=mcc);
-write.csv(cutoffs,file="result/independent_test_cutoff.csv",quote=FALSE,row.names=FALSE);
 
 cutoffs2<-melt(cutoffs,"cut");
 p2<-ggplot(cutoffs2) + geom_smooth(aes(x=cut,y=value,color=variable) )+
   geom_segment(aes(x = 0, y = 0.1, xend = 1, yend = 0.1) )+
   geom_segment(aes(x = 0.84, y = 0, xend = 0.84, yend = 1) )+
   geom_segment(aes(x = 0, y = 0.4765, xend = 1, yend = 0.4765) )+
-  geom_text(aes(x=0.05 ,y=0.14, label="y=0.1") )+
+  geom_text(aes(x=0.06 ,y=0.16, label="y=0.1") )+
   scale_colour_discrete(name="Measures",
                         breaks=c("tpr", "fpr","f1","mcc"),
                         labels=c("True positive rate", "False positive rate","F1 Score","MCC"))+
@@ -99,6 +48,7 @@ p2<-ggplot(cutoffs2) + geom_smooth(aes(x=cut,y=value,color=variable) )+
   ggtitle("TPR, FPR, F1 score and MCC change with cutoff");
 
 print(p2);
+
 
 psi_percent<-c(0.054,0.083,0.167);
 names(psi_percent)<-c("|PSI|>20%","10%<|PSI|<20%","|PSI|<10%");
@@ -115,7 +65,8 @@ p3<-ggplot(psiData)+geom_bar(aes(x=names,y=percent),stat="identity") +theme_clas
                             expression(paste("|",Delta,Psi,"|<10%") )))+
   #geom_text(aes(x=2,y=0.19), colour = "black",size = 4, label="Percentile of high disease score (>0.91)\n in different PSI group" );
     ggtitle(expression(paste("Percentile of high disease score (>0.91) in different |",
-                             Delta,Psi, "| group" ) ) );
+                             Delta,Psi, "| group" ) ) )+xlab("");
+
 
 
 pdf("result/Figure-5 (independent test&spanr test).pdf",width=8,height=6.5);

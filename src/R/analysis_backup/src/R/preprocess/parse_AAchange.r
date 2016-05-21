@@ -1,9 +1,7 @@
 
-parse_AAchange<-function(file_name){
-  aa_changes<-readLines(file_name);
+parse_AAchange<-function(aa_changes){
+  #aa_changes<-readLines(file_name);
   aa_changes<-aa_changes[aa_changes!="."];
-  #aa_changes<-aa_changes[]
-  
   aa_changes_split<-str_split(aa_changes,":")
   
   transcript_id<-sapply(aa_changes_split,"[",2);
@@ -11,8 +9,6 @@ parse_AAchange<-function(file_name){
   
   transcript_exon_id<-str_c(transcript_id,":",exon_id);
   
-  transcript_exon_id_filter<-transcript_exon_id[!grepl("egene",transcript_exon_id)];
-  
-  return(transcript_exon_id_filter);
+  return(transcript_exon_id);
 }
 

@@ -2,11 +2,9 @@
 bootstrapRandomForest<-function(data,bootstrapTime){
   allSampleIDs<-1:nrow(data);
   onePortionSize<-floor( length(allSampleIDs)/3 ); 
-  
-  sumRoc<-0;
-  
-  allProb<-c();
-  allLabel<-c();
+    
+  allProb<-rep(1,onePortionSize*bootstrapTime);
+  allLabel<-rep(1,onePortionSize*bootstrapTime);
   
   for(i in 1:bootstrapTime){
     set.seed(1000);
@@ -21,15 +19,16 @@ bootstrapRandomForest<-function(data,bootstrapTime){
                                     proximity=TRUE,replace=FALSE,nodesize=19
     );
     
-    #troc<-(roc( (data[testID,])$label, predict(modelrandomforest,data[testID,],type="prob")[,1] )$auc) [1];
     prob<-predict(modelrandomforest,data[testID,],type="prob")[,1]; 
-    label<-(data[testID,])$label; 
+    label<-as.character(data[testID,"label"]); 
     
-    allProb<-c(allProb,prob) ; 
-    allLabel<-c(allLabel,as.character(label) ) ; 
-    
-    #sumRoc<-sumRoc+troc;
+    t=i-1;
+    allProb[(t*onePortionSize+1):((t+1)*onePortionSize)]<-prob;
+    allLabel[(t*onePortionSize+1):((t+1)*onePortionSize)]<-label;
   } 
-  return(data.frame(prob=allProb,label=allLabel  )  ); 
+  names(allProb)<-allLabel;
+  return(allProb);
+  #return(data.frame(prob=allProb,label=allLabel  )  ); 
   #return (sumRoc/crossNum);
 }
+

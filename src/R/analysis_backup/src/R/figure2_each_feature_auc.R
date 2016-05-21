@@ -15,6 +15,57 @@ textplot2<-function(t_label,t_cex=5){
 setwd("/Users/mengli/Documents/splicingSNP_new/");
 source("src/R/abv.r");
 
+##prepare for panel a&b
+goodFeatures<-all_data_filter[,c("label","phylop","ss_4","asa_1","disorder_2","pfam2","ptm") ];
+
+##prepare for panel c, group features into each category
+phylopDataset<-all_data_filter[,c("label","phylop")];
+
+ssDataset<-all_data_filter[,c("label","ss_1","ss_2","ss_3","ss_4","ss_5","ss_6",
+                              "ss_7","ss_8","ss_9","ss_10","ss_11","ss_12")];
+
+asaDataset<-all_data_filter[,c("label","asa_1","asa_2","asa_3") ];
+disorderDataset<-all_data_filter[,c("label","disorder_1","disorder_2",
+                                    "disorder_3","disorder_4","disorder_5",
+                                    "disorder_6","disorder_7","disorder_8",
+                                    "disorder_9","disorder_10",
+                                    "disorder_11","disorder_12")];
+
+pfamDataset<-all_data_filter[,c("label","pfam1","pfam2")];
+
+ptmDataset<-all_data_filter[,c("label","ptm")];
+
+features<-list();features_ks<-list();
+features[["phylop"]]<-phylopDataset;features[["ss"]]<-ssDataset;
+features[["asa"]]<-asaDataset;features[["disorder"]]<-disorderDataset;
+features[["pfam"]]<-pfamDataset;features[["ptm"]]<-ptmDataset;
+
+for(i in 1:length(features) ){
+  currentFeatures<-features[[i]];
+  
+  ksTestData<-data.frame(p=2:ncol(currentFeatures), d=2:ncol(currentFeatures) );
+  featureIndex<-1;
+  
+  for(j in 2:ncol(currentFeatures)){
+    p<-ks.test(currentFeatures[currentFeatures[,1]=="NEUTRAL",j],
+               currentFeatures[currentFeatures[,1]=="HGMD",j])$p.value;
+    d<-ks.test(currentFeatures[currentFeatures[,1]=="NEUTRAL",j],
+               currentFeatures[currentFeatures[,1]=="HGMD",j])$statistic;
+    
+    #don't make p-value< e-16
+    p<- -1*log10(p);
+    if(p>16)
+      p<-16;
+    
+    ksTestData[featureIndex,]<-c( signif(p,3),signif(d,3) );
+    featureIndex<-featureIndex+1
+  }
+  features_ks[[names(features)[i]]]<-ksTestData;
+}
+
+
+  
+##the plot function
 plotFigure2<-function(){
   
   cbbPalette <- c("#000000", "#AAAAAA","#000000","#E69F00", 
@@ -22,7 +73,7 @@ plotFigure2<-function(){
                   "#D55E00", "#CC79A7");
   plot.new();
   
-  gl <- grid.layout(nrow=4, ncol=7, heights=c(0.1,1,1,1), widths=c(0.5,1,1,1,1,1,1) );
+  gl <- grid.layout(nrow=4, ncol=7, heights=c(0.1,1,1,1), widths=c(0.6,1,1,1,1,1,1) );
   
   vp.title <- viewport(layout.pos.row=1, layout.pos.col=1:7);
   
@@ -30,96 +81,47 @@ plotFigure2<-function(){
   vp.20 <- viewport(layout.pos.row=3, layout.pos.col=1);
   vp.30 <- viewport(layout.pos.row=4, layout.pos.col=1);
   
-  vp.11 <- viewport(layout.pos.row=2, layout.pos.col=1+1);
-  vp.12 <- viewport(layout.pos.row=2, layout.pos.col=2+1);
-  vp.13 <- viewport(layout.pos.row=2, layout.pos.col=3+1);
-  vp.14 <- viewport(layout.pos.row=2, layout.pos.col=4+1);
-  vp.15 <- viewport(layout.pos.row=2, layout.pos.col=5+1);
-  vp.16 <- viewport(layout.pos.row=2, layout.pos.col=6+1);
-  
-  vp.21 <- viewport(layout.pos.row=3, layout.pos.col=1+1);
-  vp.22 <- viewport(layout.pos.row=3, layout.pos.col=2+1);
-  vp.23 <- viewport(layout.pos.row=3, layout.pos.col=3+1);
-  vp.24 <- viewport(layout.pos.row=3, layout.pos.col=4+1);
-  vp.25 <- viewport(layout.pos.row=3, layout.pos.col=5+1);
-  vp.26 <- viewport(layout.pos.row=3, layout.pos.col=6+1);
-  
-  vp.31 <- viewport(layout.pos.row=4, layout.pos.col=1+1);
-  vp.32 <- viewport(layout.pos.row=4, layout.pos.col=2+1);
-  vp.33 <- viewport(layout.pos.row=4, layout.pos.col=3+1);
-  vp.34 <- viewport(layout.pos.row=4, layout.pos.col=4+1);
-  vp.35 <- viewport(layout.pos.row=4, layout.pos.col=5+1);
-  vp.36 <- viewport(layout.pos.row=4, layout.pos.col=6+1);
-  
-  vps<-list();
-  vps[[1]]<-vp.11;
-  vps[[2]]<-vp.12;
-  vps[[3]]<-vp.13;
-  vps[[4]]<-vp.14;
-  vps[[5]]<-vp.15;
-  vps[[6]]<-vp.16;
-  
-  vps[[7]]<-vp.21;
-  vps[[8]]<-vp.22;
-  vps[[9]]<-vp.23;
-  vps[[10]]<-vp.24;
-  vps[[11]]<-vp.25;
-  vps[[12]]<-vp.26;
-  
-  vps[[13]]<-vp.31;
-  vps[[14]]<-vp.32;
-  vps[[15]]<-vp.33;
-  vps[[16]]<-vp.34;
-  vps[[17]]<-vp.35;
-  vps[[18]]<-vp.36;
+  t<-1;vps<-list();
+  for(i in 2:4){
+	  for(j in 2:7){
+	  	vps[[t]]<-viewport(layout.pos.row=i, layout.pos.col=j);
+		  t<-t+1;
+	  }
+  }
   
   pushViewport(viewport(layout=gl)  );
   
+  ##plot panel labels
   pushViewport(vp.title);
   par(new=TRUE, fig=gridFIG(),mar=c(0.0,0.1,0.1,0.1));  
   textplot2("Each feature's distribution and KS-test statistic",0.7); 
   popViewport();
   
-  #pushViewport(vp.1);
   
   pushViewport(vp.10);  
-  par(new=TRUE, fig=gridFIG(),mar=c(0.2,0.2,0.2,0.2),cex=0.5);  
-  
+  par(new=TRUE, fig=gridFIG(),mar=c(0.2,0.2,0.1,0.1),cex=0.5);  
   textplot2("(pdf)",1); 
   text(-0.8,0,labels="a",font=2 ,cex=1);
-  legend(x="bottom",legend=c("HGMD","Neutral"),col=c(cbbPalette[1],cbbPalette[2]),lty=c(1,1),bt="n" );
-  #plot(c(1,2,3,4));
+  legend(x="bottom",legend=c("HGMD","NEUTRAL"),col=c(cbbPalette[1],cbbPalette[2]),lty=c(1,1),bt="n" );
   popViewport();
+  
   
   pushViewport(vp.20);
-  par(new=TRUE, fig=gridFIG(),mar=c(0.2,0.2,0.2,0.2) ); 
-  
-  textplot2("(cpd)" ,1); 
+  par(new=TRUE, fig=gridFIG(),mar=c(0.2,0.2,0.1,0.1) ); 
+  textplot2("(cdf)" ,1); 
   text(-0.8,0,labels="b",font=2,cex=1 );
-  
-  
-  #plot(c(1,2,3,4));
   popViewport();
+  
   
   pushViewport(vp.30);
   par(new=TRUE, fig=gridFIG(),mar=c(0.2,0.2,0.2,0.2));  
-  
   textplot2("(KS-test)",1); 
   text(-0.8,0,labels="c",font=2,cex=1 );
-  #plot(c(1,2,3,4));
   popViewport();
   
-  goodFeatures<-all_data_filter[,c("label","phylop","ss_4","asa_1","disorder_2","pfam2","ptm") ];
-  #meltFeatures<-melt(goodFeatures,factorsAsStrings=FALSE);
-  #meltFeatures[,"variable"]<-as.character(meltFeatures[,"variable"]);
+  ##selected features for each feature category
   
-  #meltFeatures[,"variable"]<-factor(
-  #  abv(meltFeatures[,"variable"]), 
-  #  levels=c(abv("phylop"),abv("ss_3"),abv("asa_1"),
-  #           abv("disorder_2"),abv("pfam"),abv("ptm")
-  #  ));
-  
-  
+  #plot panel a
   for(i in 2:ncol(goodFeatures)){
     
     pushViewport(vps[[i-1]]);    
@@ -155,28 +157,7 @@ plotFigure2<-function(){
     
   }
   
-  phylopDataset<-all_data_filter[,c("label","phylop")];
-  ssDataset<-all_data_filter[,c("label","ss_1","ss_2","ss_3","ss_4","ss_5","ss_6",
-                                "ss_7","ss_8","ss_9","ss_10","ss_11","ss_12")];
-  asaDataset<-all_data_filter[,c("label","asa_1","asa_2","asa_3") ];
-  disorderDataset<-all_data_filter[,c("label","disorder_1","disorder_2",
-                                      "disorder_3","disorder_4","disorder_5",
-                                      "disorder_6","disorder_7","disorder_8",
-                                      "disorder_9","disorder_10",
-                                      "disorder_11","disorder_12")];
-  
-  pfamDataset<-all_data_filter[,c("label","pfam1","pfam2")];
-  ptmDataset<-all_data_filter[,c("label","ptm")];
-  
-  
-  features<-list();
-  features[["phylop"]]<-phylopDataset;
-  features[["ss"]]<-ssDataset;
-  features[["asa"]]<-asaDataset;
-  features[["disorder"]]<-disorderDataset;
-  features[["pfam"]]<-pfamDataset;
-  features[["ptm"]]<-ptmDataset;
-  
+  ##plot panel b
   for(i in 2:ncol(goodFeatures) ){
     
     pushViewport(vps[[i-1+6]]);
@@ -200,29 +181,13 @@ plotFigure2<-function(){
     popViewport();
   }
   
-  
-  for(i in 1:length(features) ){
-    currentFeatures<-features[[i]];
+
+  #plot panel c
+  for(i in 1:length(features_ks) ){
+    #currentFeatures<-features[[i]];
+    ksTestData<-features_ks[[i]];
     
-    ksTestData<-data.frame(p=2:ncol(currentFeatures), d=2:ncol(currentFeatures) );
-    featureIndex<-1;
-    
-    for(j in 2:ncol(currentFeatures)){
-      p<-ks.test(currentFeatures[currentFeatures[,1]=="NEUTRAL",j],
-                 currentFeatures[currentFeatures[,1]=="HGMD",j])$p.value;
-      d<-ks.test(currentFeatures[currentFeatures[,1]=="NEUTRAL",j],
-                 currentFeatures[currentFeatures[,1]=="HGMD",j])$statistic;
-      
-      p<- -1*log10(p);
-      if(p>16)
-        p<-16;
-      
-      ksTestData[featureIndex,]<-c( signif(p,3),signif(d,3) );
-      featureIndex<-featureIndex+1
-      
-    }
-    
-    currentName<-names(features)[i];
+    currentName<-names(features_ks)[i];
     currentName<- abv(currentName);
     
     pushViewport(vps[[i+6+6]]);
@@ -235,14 +200,13 @@ plotFigure2<-function(){
     
     axisPos<-par("usr");
     start<-(axisPos[2]-axisPos[1])/20+axisPos[1];
-    text(start,axisPos[4]-0.1,labels=abv(names(features)[i] ) ,cex=0.7,pos=4);
+    text(start,axisPos[4]-0.1,labels=currentName ,cex=0.7,pos=4);
     #title(xlab="p-value",ylab="d-value")
     
     popViewport();
-    
   }
-  
 }
+
 
 pdf("result/Figure-2 (evaluate each feature).pdf",width=8,height=4);
 plotFigure2();

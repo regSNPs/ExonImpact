@@ -1,8 +1,21 @@
 library(stringr);
+library(reshape2);
+library(ggplot2);
+library(R.devices);
+
+setwd("/Users/mengli/Documents/splicingSNP_new/");
+source("src/R/platte.r")
 
 d_values<-c();
 p_values<-c();
+panel_labels<-c("a","b","c","d","e",
+                "f","g","h","i","j",
+                "k","l","m","n","o",
+                "p","q","r","s","t",
+                "u","v","w","x","y",
+                "z","aa","ab","ac","ad","ae","af")
 
+#calculate the KS-test p-value and d-value
 for(i in 2:(ncol(all_data_filter)) ){
   currentFeature<-data.frame(all_data_filter[,1],all_data_filter[,i]);
   d_value<-ks.test(currentFeature[currentFeature[,1]=="HGMD",2],currentFeature[currentFeature[,1]=="NEUTRAL",2] )$statistic;
@@ -11,18 +24,35 @@ for(i in 2:(ncol(all_data_filter)) ){
   p_values<-c(p_values,p_value);
 }
 
-all_data_stat<-data.frame(name=colnames(all_data_filter)[-1],d_values=d_values,p_values=p_values );
+#summarisie the statistic data
+all_data_stat<-data.frame(name=colnames(all_data_filter)[-1],
+                          d_values=d_values,
+                          p_values=p_values,
+                          label=panel_labels[1:length(d_values)] );
 
-stat_names<-str_c(all_data_stat$name,
+#calcuate the blank space
+blank_pre<-apply(all_data_stat,1,function(x){
+  name<-x["name"];
+  name_len<-nchar(as.character(name));
+  
+  d_values<-as.numeric(x["d_values"] );
+  p_values<-as.numeric(x["p_values"] );
+  d_len<-nchar(signif(d_values,3) );
+  p_len<-nchar(signif(p_values,3) );
+  
+  len<-100-(name_len+d_len+p_len);
+  re<-paste(rep(" ",len ),collapse="" );
+  return(re);
+});
+
+#change the feature name to add p-value and d-value.
+stat_names<-str_c(all_data_stat$label,blank_pre,all_data_stat$name,
                   " (d-value=",signif(all_data_stat$d_values,3),
                   " p-value=",signif(all_data_stat$p_values,3),")" );
 
 all_data_filter_figure2<-all_data_filter;
 colnames(all_data_filter_figure2)<-c("label",stat_names);
 
-cbbPalette <- c("#000000", "#AAAAAA","#000000","#E69F00", 
-                "#56B4E9", "#009E73", "#F0E442", "#0072B2",
-                "#D55E00", "#CC79A7");
 
 all_data_filter_melt<-melt(all_data_filter_figure2,.(label) ); 
 
@@ -33,9 +63,10 @@ a<-ggplot(all_data_filter_melt,mapping=aes(x=value))+
   
   #ggtitle(paste0("AUC : ",format(aroc$auc,digits=3),"\nKS-test D-value: ",
   #               format(d_value,digits=3),"\nKS-test P-value: ",format(p_value,digits=3) ) )+
-  scale_fill_manual(values=cbbPalette)+facet_wrap(~variable,ncol = 2,scales="free")+
+  scale_fill_manual(values=platte_black)+facet_wrap(~variable,ncol = 2,scales="free")+
   theme(legend.position="top" ,legend.title=element_blank(),text=element_text(size=7) )+
-  ggtitle("Supplement Figure 2 Probability density of each feature")+xlab("feature");
+  ggtitle("Supplement Figure 2 Probability density of each feature")+xlab("feature")+
+  #geom_label(aes(x=min(value),y=1,label="a") ); 
 
 
 pdf("result/Supplement Figure 2 (Distribution for each feature).pdf",width=8,height=20)

@@ -184,7 +184,8 @@ public class Exon_transcript_feature {
 		//transcript.getTx_start(), transcript.getTx_end() );
 		//log.trace("get phylop for the target region!");
 
-		phylop_scores_target_region = Extractor_phylop.get_instance().extract(exon_region_in_genome.getValue1(),exon_region_in_genome.getValue2(), exon_region_in_genome.getValue3() );
+		phylop_scores_target_region = Extractor_phylop.get_instance().extract(exon_region_in_genome.getValue1(),exon_region_in_genome.getValue2(),
+				exon_region_in_genome.getValue3() );
 		
 		//phylop_scores_fragment=Extractor_phylop_online.extract(miso_frag.getChr(),	miso_frag.getTx_start(),miso_frag.getTx_end());
 		
