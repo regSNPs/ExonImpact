@@ -10,12 +10,12 @@ After this, users should open the configuration.txt file to set the path to the 
 So in all, the install procedure include:
 
 1. download the database from:  
-wget https://watson.compbio.iupui.edu/ExonImpact/db/ensembl.db
-wget https://watson.compbio.iupui.edu/ExonImpact/db/phylop/*
-wget https://watson.compbio.iupui.edu/ExonImpact/db/ens_extern_hg19.bed
-wget https://watson.compbio.iupui.edu/ExonImpact/db/chrom/*
+wget https://watson.compbio.iupui.edu/ExonImpact/db/ensembl.db 
+wget https://watson.compbio.iupui.edu/ExonImpact/db/phylop/* 
+wget https://watson.compbio.iupui.edu/ExonImpact/db/ens_extern_hg19.bed 
+wget https://watson.compbio.iupui.edu/ExonImpact/db/chrom/* 
 
-2. set the path in 'configuration.txt'.
+2. set the path in 'configuration.txt'. 
 Set the path to the download database in the configuration.txt file. 
 Users need to donwload some jar libraries which will be used by the tool.
 commons-beanutils-1.9.2.jar
