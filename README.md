@@ -45,4 +45,4 @@ Three inputs format are accept, Inlucde:
 2. Miso format
 3. Exon Id format
 
-
+The output is in the usr_input directory, although these can be changed very easily when you set up the tool. 
