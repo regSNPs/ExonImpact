@@ -6,6 +6,7 @@ library(grid);
 setwd("/Users/mengli/Documents/splicingSNP_new/");
 source("src/R/multiplot.r");
 source("src/R/get_roc_data.r");
+all_data_filter<-sample_n(all_data_filter,nrow(all_data_filter) );
 
 nLine<-as.integer(nrow(all_data_filter)/3*2);
 
@@ -27,15 +28,16 @@ auc_value<-cutoffs[1,"auc"];
 p1<-ggplot(cutoffs)+geom_ribbon(aes(x=fpr,ymin=0,ymax=tpr),fill="gray66")+ #geom_area(fill="green")+
   xlab("Fasle Positive Rate")+ylab("True Positive Rate")+theme_classic()+theme(text=element_text(size=7))+
   geom_text(aes(x=0.1,y=1.2), colour = "black", fontface = "bold",label="a  ",size = 4)+
-  #geom_text(aes(x=0.5,y=1.2), colour = "black",size = 4,label=paste0("Independent test (AUC=",signif(auc_value,3),")" ) );
+  #geom_text(aes(x=0.5,y=1.2), colour = "black",size = 4,
+  #label=paste0("Independent test (AUC=",signif(auc_value,3),")" ) );
   ggtitle(paste0("Independent test (AUC=",signif(auc_value,3),")" ) );
 
 
-cutoffs2<-melt(cutoffs,"cut");
-p2<-ggplot(cutoffs2) + geom_smooth(aes(x=cut,y=value,color=variable) )+
+cutoffs2<-melt(cutoffs[,c("cut","tpr","fpr","f1","mcc")],"cut");
+p2<-ggplot(cutoffs2) + geom_smooth(aes(x=cut,y=value,color=variable),linetype=1,size=0.5 ,se=FALSE)+
   geom_segment(aes(x = 0, y = 0.1, xend = 1, yend = 0.1) )+
-  geom_segment(aes(x = 0.84, y = 0, xend = 0.84, yend = 1) )+
-  geom_segment(aes(x = 0, y = 0.4765, xend = 1, yend = 0.4765) )+
+  geom_segment(aes(x = 0.82, y = 0, xend = 0.82, yend = 1) )+
+  #geom_segment(aes(x = 0, y = 0.4765, xend = 1, yend = 0.4765) )+
   geom_text(aes(x=0.06 ,y=0.16, label="y=0.1") )+
   scale_colour_discrete(name="Measures",
                         breaks=c("tpr", "fpr","f1","mcc"),
@@ -56,14 +58,17 @@ names(psi_percent)<-c("|PSI|>20%","10%<|PSI|<20%","|PSI|<10%");
 psiData<-data.frame(percent=psi_percent,names=names(psi_percent) );
 psiData[,"names"]<-factor(psiData[,"names"],levels=c("|PSI|>20%","10%<|PSI|<20%","|PSI|<10%"));
 
-p3<-ggplot(psiData)+geom_bar(aes(x=names,y=percent),stat="identity") +theme_classic()+
+p3<-ggplot(psiData,aes(x=names,y=percent))+geom_bar(stat="identity") +theme_classic()+
   ylim(0,0.20)+theme(text=element_text(size=7))+
   geom_text(aes(x=0.6,y=0.197), colour = "black", fontface = "bold",label="b  ",size = 4)+
   scale_x_discrete(breaks=c("|PSI|>20%", "10%<|PSI|<20%", "|PSI|<10%"),
                    labels=c(expression(paste("|",Delta,Psi,"|>20%") ), 
                             expression(paste("10%<|",Delta,Psi,"|<20%") ),
                             expression(paste("|",Delta,Psi,"|<10%") )))+
-  #geom_text(aes(x=2,y=0.19), colour = "black",size = 4, label="Percentile of high disease score (>0.91)\n in different PSI group" );
+  geom_text(aes(y=percent+1/80),label=sprintf("%1.1f%%",psi_percent*100 ) )+
+  
+  #geom_text(aes(x=2,y=0.19), colour = "black",size = 4, 
+  #label="Percentile of high disease score (>0.91)\n in different PSI group" );
     ggtitle(expression(paste("Percentile of high disease score (>0.91) in different |",
                              Delta,Psi, "| group" ) ) )+xlab("");
 

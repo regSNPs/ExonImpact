@@ -8,7 +8,7 @@ bootstrapRandomForest<-function(data,bootstrapTime){
   
   for(i in 1:bootstrapTime){
     set.seed(1000);
-    print(paste0("bootstrap number: ",i));
+    flog.trace(paste0("bootstrap number: ",i));
     testID<-sample(allSampleIDs,onePortionSize,replace=TRUE); 
     #allSampleIDs<-setdiff(allSampleIDs,testID); 
     trainID<-setdiff(  allSampleIDs,  testID  ); 

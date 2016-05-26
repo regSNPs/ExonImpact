@@ -4,7 +4,7 @@ library(ggplot2);
 library(R.devices);
 
 setwd("/Users/mengli/Documents/splicingSNP_new/");
-source("src/R/platte.r")
+source("src/R/platte.r");
 
 d_values<-c();
 p_values<-c();

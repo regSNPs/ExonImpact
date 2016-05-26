@@ -48,10 +48,14 @@ public class Bed_region_extractor implements Extractor {
 	public ArrayList<Transcript> getTranscripts(String chr, long beg, long end) throws IOException {
 		ArrayList<Transcript> transcripts = new ArrayList<Transcript>();
 			CloseableTribbleIterator<ExtendBEDFeature> iter = source.query(chr, (int) beg, (int) end);
+			
 			while (iter.hasNext()) {
 				ExtendBEDFeature cur_iter = iter.next();
 				
 				Transcript t = cur_iter.transcript;
+				
+				t.setGene_id(cur_iter.getGene_id()) ;
+				t.setProtein_id(cur_iter.getProtein_id());
 				
 				t.setIs_protein_coding(cur_iter.isIs_protein_coding());
 				
@@ -60,8 +64,8 @@ public class Bed_region_extractor implements Extractor {
 				t.setChr(cur_iter.getChr());
 				t.setStrand(cur_iter.getStrand());
 				t.setTranscript_id(cur_iter.getName());
-
 				transcripts.add(t);
+				
 			}
 
 		return transcripts;
@@ -89,9 +93,7 @@ public class Bed_region_extractor implements Extractor {
 					
 					if(cur_iter.getStrand().equals(Strand.NEGATIVE))
 						exon_index=t.getExons().size()-exon_index+1;
-					
-					
-					
+						
 					int exon_beg=t.getExons().get(exon_index-1).getExonBegCoorPos();
 					int exon_end=t.getExons().get(exon_index-1).getExonEndCoorPos();
 					

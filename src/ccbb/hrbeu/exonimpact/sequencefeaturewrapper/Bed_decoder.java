@@ -23,10 +23,18 @@ public class Bed_decoder {
 	
 	static String bed_pattern="chr\\w+\\t(\\d+)\\t(\\d+)";
 	
+	static String exon_region_pattern="chr\\w+:(\\d+):(\\d+)";
+	
 	public static boolean is_bed(String input){
 		boolean is_bed = Pattern.matches(bed_pattern, input);
 		
 		return is_bed;
+	}
+	
+	public static boolean is_exon_region(String input){
+		boolean is_exon_region = Pattern.matches(exon_region_pattern, input);
+		
+		return is_exon_region;
 	}
 	
 	public Transcript get_transcript(String input) {

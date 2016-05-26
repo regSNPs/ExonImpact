@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" href="lib/index.css" type="text/css"/>
+	</head>
+	<body bgcolor="white">
+		<div id = "header" >
+			<img src="pic/iu.png" align='left' name="center_logo" width="100" height="100" id="Insert_logo" style="display:block;"></img>
+			<img src="pic/center_logo.png" width="96" height="95" align="right" "display:block;"></img>
+			<div id="header_txt" style="color:white">ExonImpact: A tool measuring exon's importance.</div>
+			<!-- end .header -->
+		</div>
+		<div id="sidebar1">
+			<ul class="nav">
+				<li><a href="#document">Document</a></li>
+				<li><a href="https://github.com/regSNPs/ExonImpact">Source code</a></li>
+				<li><a href="mailto:yunliu@iupui.edu">Contact us</a></li>
+			</ul>
+			<p style="font-size:15px";>Dec,11,2015: Version 1.0 released.</p>
+			<!-- 
+			<p>Related links</p>
+			<ul style="list-style: none;">
+				<li style="font-size:15px";><a href="http://www.hgmd.cf.ac.uk">HGMD</a></li>
+				<li style="font-size:15px";><a href="http://www.1000genomes.org">1000 Genomes Project</a></li>
+				<li style="font-size:15px";><a href="http://www.ncbi.nlm.nih.gov/clinvar/">ClinVar</a></li>
+			</ul>
+			end .
+		</div>
+		<div id="sidebar2">
+			<h4>Citation</h4>
+			<hr>
+			<p>article title</p>
+			sidebar2 -->
+		</div>
+		<div id= "center">
+			<form action="result.php" method="post" enctype="multipart/form-data" >
+				<table style="width: 80%;">
+					<!--  <div style="background-color: #87CEFA; width:75%; padding=5px;"> -->
+					<tr>
+					<div style="width:90%; padding:2px">
+						<h3></br>
+							The input can be miso events format (SE,RI,A3SS,A5SS) or  bed format.</br>
+							The input examples list as below:</br>
+						</h3>
+						<p id="example">
+						Example chrY:26952216:26952307:-@chrY:26951604:26951655:-@chrY:26950875:26951104:-</br>
+						Example chrY	26951604	26951655</br>
+						</p>
+						<td><textarea id="input_format" name="data_textbox" style="width: 950px; height: 250px;" wrap='off' align='left' placeholder=""></textarea>
+						</td>
+						
+					</div>
+					</tr>
+					
+					<tr>
+						<td><button type = 'submit' name = 'user_query' style="width: 60px;height:30px">Submit</button>
+						</td>
+					</tr>
+					
+				</table>
+			</form>
+			<hr>
+			<tr>
+				<p>If you have any problem with the website, please contact:<a href="mailto:yunliu@iupui.edu" target="_top">Yunlong Liu</a>.</p>
+			</tr>
+			<tr>
+				<p id="source">Source code: https://github.com/regSNPs/ExonImpact</p>
+				<p id="document">Document: Please reference the paper we published.</p>
+			</tr>
+			</hr>
+			<!-- end .container -->
+		</div>
+		<script type="text/javascript">
+			var textareas = document.getElementsByTagName('textarea');
+			var count = textareas.length;
+			for(var i=0;i<count;i++){
+			    textareas[i].onkeydown = function(e){
+			        if(e.keyCode==9 || e.which==9){
+			            e.preventDefault();
+			            var s = this.selectionStart;
+			            this.value = this.value.substring(0,this.selectionStart) + "\t" + this.value.substring(this.selectionEnd);
+			            this.selectionEnd = s+1; 
+			        }
+			    }
+			}
+			
+		</script>
+	</body>
+</html>

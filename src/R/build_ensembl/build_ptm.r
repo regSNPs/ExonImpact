@@ -1,8 +1,8 @@
-library(dplyr);
 library(plyr);
+library(dplyr);
 library(readr);
 
-setwd("/Users/mengli/Documents/splicingSNP/exon_impact_new");
+setwd("/Users/mengli/Documents/splicingSNP/exon_impact_new/data/build_db/");
 
 idMapping<-as.data.frame(read_tsv("HUMAN_9606_idmapping.dat",col_names=FALSE),stringsAsFactors=FALSE);
 colnames(idMapping)<-c("UniProtKB.ID","source","mapping");
@@ -17,8 +17,9 @@ dbPTM<-as.data.frame(read_tsv("dbPTM3.txt",col_names=FALSE),stringsAsFactors=FAL
 colnames(dbPTM)<-c("organism","UniProtKB.ID","position","word","pubmedID","source_db","shortCode","modification");
 
 ptm<-inner_join(idMapping,dbPTM,by=c("UniProtKB.ID"="UniProtKB.ID") );
-ptms<-unique(ptm[,"modification"]);
-cat(ptms,file="ptm.list",sep="\n");
+
+#ptms<-unique(ptm[,"modification"]);
+#cat(ptms,file="ptm.list",sep="\n");
 
 resultTable<-ptm[,c("mapping","UniProtKB.ID","position","modification")];
 resultTable[,"mapping"]<-sapply(strsplit(resultTable[,"mapping"],"\\."),"[",1 ); 

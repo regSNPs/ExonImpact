@@ -85,6 +85,12 @@ Tris<String, Integer, Integer> exon_region = Bed_region_extractor.get_instance()
 		}else if(Bed_decoder.is_bed(raw_input) ){
 			fragment = Bed_decoder.get_instance().get_transcript(raw_input);
 			
+		}else if(Bed_decoder.is_exon_region(raw_input)){
+			log.trace("waning, the input must same with BED 0-based coordinate");
+			raw_input=raw_input.replaceAll(":", "\\\t");
+			log.trace("the processed input is:"+raw_input);
+			fragment = Bed_decoder.get_instance().get_transcript(raw_input);
+			
 		}else if(Miso_decoder.tellASType(raw_input)!=ASTYPE.UNKNOWN){
 			fragment = Miso_decoder.get_instance().get_transcript(raw_input);
 			
@@ -127,7 +133,8 @@ Tris<String, Integer, Integer> exon_region = Bed_region_extractor.get_instance()
 			// iter_transcript);
 
 			exon_transcript_features.add(new Exon_transcript_feature(raw_input, iter_transcript,fragment,
-					iter_transcript.isIs_protein_coding(), is_match,is_match.getExon_index(), exon_region_in_genome, exon_region_in_protein,
+					iter_transcript.isIs_protein_coding(), is_match,is_match.getExon_index(),
+					exon_region_in_genome, exon_region_in_protein,
 					Feature_extractors));
 		}
 		
@@ -236,7 +243,7 @@ Tris<String, Integer, Integer> exon_region = Bed_region_extractor.get_instance()
 	start=Math.floor(protein_len - end_len +1)>0?(int)Math.floor(protein_len - end_len +1):1;
 	end=Math.ceil(protein_len - start_len+1)<=protein_len?(int)Math.ceil(protein_len - start_len+1):(int)protein_len;
 			
-			return new Tris<String, Integer, Integer>(trans.getChr(), start,end );
+			return new Tris<String, Integer, Integer>(trans.getTranscript_id(), start,end );
 		}
 		
 		start=Math.floor(start_len)>0?(int)Math.floor(start_len):1;

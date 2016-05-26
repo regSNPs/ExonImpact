@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">  
+body{
+	margin-top: 5px;
+	margin-right: 5px;
+	margin-left: 5px;
+	
+}
+ul, ol, dl { /* Due to variations between browsers, it's best practices to zero padding and margin on lists. For consistency, you can either specify the amounts you want here, or on the list items (LI, DT, DD) they contain. Remember that what you do here will cascade to the .nav list unless you write a more specific selector. */
+	padding: 0;
+	margin: 0;
+}
+h1, h2, h3, h4, h5, h6, p {
+	margin-top: 0;	 /* removing the top margin gets around an issue where margins can escape from their containing div. The remaining bottom margin will hold it away from any elements that follow. */
+	padding-right: 15px;
+	padding-left: 15px; /* adding the padding to the sides of the elements within the divs, instead of the divs themselves, gets rid of any box model math. A nested div with side padding can also be used as an alternate method. */
+}
+a img { /* this selector removes the default blue border displayed in some browsers around an image when it is surrounded by a link */
+	border: none;
+}
+
+/* ~~ Styling for your site's links must remain in this order - including the group of selectors that create the hover effect. ~~ */
+a:link {
+	color: #42413C;
+	text-decoration: underline; /* unless you style your links to look extremely unique, it's best to provide underlines for quick visual identification */
+}
+a:visited {
+	color: #6E6C64;
+	text-decoration: underline;
+}
+a:hover, a:active, a:focus { /* this group of selectors will give a keyboard navigator the same hover experience as the person using a mouse. */
+	text-decoration: none;
+}
+
+/* ~~ This fixed width container surrounds all other divs ~~ */
+.container {
+	width: 960px;
+	background-color: #FFFFFF;
+	margin: 0 auto; /* the auto value on the sides, coupled with the width, centers the layout */
+}
+
+#example{
+	font-size: 12px;
+	color: #778899 
+}
+/* ~~ The header is not given a width. It will extend the full width of your layout. It contains an image placeholder that should be replaced with your own linked logo. ~~ */
+#header {
+	height: 100px;
+	text-align:center;
+	padding:5px;
+	background: black url(pic/banner.png) center no-repeat;	
+}
+#header_txt{
+	margin: 30px 15px 40px 15px;
+	padding-left:100px;
+	font-size: 1.8em;
+	font-weight: bold;
+	float:left;
+	}
+	#header_logo {
+		padding:1px;
+		float:left;
+	}
+	#sidebar1 {
+		float: left;
+		width: 180px;
+		background-color: #dfd9bd;
+		padding: 10px;
+	}
+        #sidebar2 {  
+            width: 200px;  
+            height: 100%;  
+            background: #dfd9bd;
+            float: right;  
+			padding:10px;
+        }  
+        #center {  
+            height: 100%;  
+            background: FFEFD5;  
+
+            margin-left:10px;
+			margin-right:10px;
+
+			margin: 0 0 0 210px;     
+			padding: 10px;     
+        }  
+        #footer {  
+            background: grey;  
+            height: 50px;  
+            width: 100%;  
+            position: absolute;  
+            bottom: 0;  
+        }
+
+/* ~~ This grouped selector gives the lists in the .content area space ~~ */
+.content ul, .content ol { 
+	padding: 0 15px 15px 40px; /* this padding mirrors the right padding in the headings and paragraph rule above. Padding was placed on the bottom for space between other elements on the lists and on the left to create the indention. These may be adjusted as you wish. */
+}
+
+/* ~~ The navigation list styles (can be removed if you choose to use a premade flyout menu like Spry) ~~ */
+ul.nav {
+	list-style: none; /* this removes the list marker */
+	border-top: 1px solid #666; /* this creates the top border for the links - all others are placed using a bottom border on the LI */
+	margin-bottom: 15px; /* this creates the space between the navigation on the content below */
+}
+ul.nav li {
+	border-bottom: 1px solid #666; /* this creates the button separation */
+}
+ul.nav a, ul.nav a:visited { /* grouping these selectors makes sure that your links retain their button look even after being visited */
+	padding: 5px 5px 5px 15px;
+	display: block; /* this gives the anchor block properties so it fills out the whole LI that contains it so that the entire area reacts to a mouse click. */
+	width: 160px;  /*this width makes the entire button clickable for IE6. If you don't need to support IE6, it can be removed. Calculate the proper width by subtracting the padding on this link from the width of your sidebar container. */
+	text-decoration: none;
+	background-color: #dfd9bd;
+}
+ul.nav a:hover, ul.nav a:active, ul.nav a:focus { /* this changes the background and text color for both mouse and keyboard navigators */
+	background-color: #ADB96E;
+	color: #FFF;
+}
+</style>  
+
+</head>
+
+<body bgcolor="white">
+  <div id = "header" >
+	<img src="pic/iu.png" align='left' name="center_logo" width="100" height="100" id="Insert_logo" style="display:block;"/>
+	<img src="pic/center_logo.png" width="96" height="95" align="right" "display:block;"/>
+	<div id="header_txt" style="color:white">ExonImpact</div>
+    <!-- end .header --></div>
+  <div id="sidebar1">
+    <ul class="nav">
+      <li><a href="#document">Document</a></li>
+      <li><a href="#source">Source code</a></li>
+      <li><a href="mailto:yunliu@iupui.edu">Contact us</a></li>
+    </ul>
+    <p>News</p>
+	<p style="font-size:15px";>Dec,11,2015: Version 1.0 released.</p>
+    <p>Related links</p>
+    <ul style="list-style: none;">
+      <li style="font-size:15px";><a href="http://www.hgmd.cf.ac.uk">HGMD</a></li>
+      <li style="font-size:15px";><a href="http://www.1000genomes.org">1000 Genomes Project</a></li>
+      <li style="font-size:15px";><a href="http://www.ncbi.nlm.nih.gov/clinvar/">ClinVar</a></li>
+    </ul>
+	
+    <!-- end .sidebar1 --></div>
+   <div id="sidebar2">
+    <h4>Citation</h4>
+	<hr>
+    <p>article title</p>
+    <!-- end .sidebar2 --></div> 
+
+<div id= "center">
+<form action="result.php" method="post" enctype="multipart/form-data" >
+  <table>
+<!--    <div style="background-color: #87CEFA; width:75%; padding=5px;"> -->
+    <div style="width:75%; padding=5px;">
+	<h3><b> <br /><br /> The tool can measure exon's importance.</br>
+	</b>The input can be miso events format (SE,RI,A3SS,A5SS) or directly exon region format.
+	</b> The input examples list as below:</b></h3>
+	</br>
+	</br>
+	<p id="example">Example input1: chr12:53708900<br/> 
+	Example input2: chr2:17902409:17902528:-</br>
+	Example input3: chr1:906066-906138:+@chr1:906259-906386:+<br/>
+	Example input4: chr2:130914824:130914969:-@chr2:130914199|130914248:130914158:-<br/>
+	Example input5: chr1:235929577:235929379|235929539:-@chr1:235926020:235926151:-<br/>
+	Example input6: chr15:42565453:42565755:-@chr15:42564261:42564321:-@chr15:42560145:42560230:-<br/>
+	</p>
+	
+	<td><textarea id="input_format" name="data_textbox" style="width: 600px; height: 250px;" wrap='off' align='left' placeholder="#chr:position or miso event format">
+chrY:26952216:26952307:-@chrY:26951604:26951655:-@chrY:26950875:26951104:-
+</textarea></td>
+	
+	</div>
+ <tr>
+                <p>
+        </tr>
+
+       <tr>
+     <td><button type = 'submit' name = 'user_query'>Submit</button></td>
+<!--
+
+<?php
+//do establish session
+//and check for the input fields obtained via $_POST
+if(isset($_POST['data_file']) || !empty($_POST['data_textbox'])){
+        header('location: result.html');  
+	exit();
+}
+?>
+
+-->
+
+    </tr>
+
+ </table>
+</form>
+
+
+<hr>
+<tr>
+<p>If you have any problem with the website, please contact:<a href="mailto:yunliu@iupui.edu" target="_top">Yunlong Liu</a>.</p>
+</tr>
+
+<tr>
+<p id="source">Source code: Source code can be provide when being request.</p>
+<p id="document">Document: Please reference the paper we published.</p>
+</tr>
+
+  <!-- end .container --></div>
+
+<script  type="text/javascript">
+
+var textareas = document.getElementsByTagName('textarea');
+var count = textareas.length;
+for(var i=0;i<count;i++){
+    textareas[i].onkeydown = function(e){
+        if(e.keyCode==9 || e.which==9){
+            e.preventDefault();
+            var s = this.selectionStart;
+            this.value = this.value.substring(0,this.selectionStart) + "\t" + this.value.substring(this.selectionEnd);
+            this.selectionEnd = s+1; 
+        }
+    }
+}
+
+</script>
+
+
+</body>
+</html>
+

@@ -12,11 +12,11 @@ attr_data<-as.data.frame(attr,stringAsFactors=F);
 donors<-substr(attr_data[,2],1,9)
 donorNumber<-length(unique(donors));
 
-cat( paste0("donors number: ",donorNumber,"\n"),file="result/log.txt",append=TRUE ); 
-cat( paste0("brain region number: ",length(unique(attr_data[,15])), "\n"),file="result/log.txt",append=TRUE );
+flog.info( paste0("donors number: ",donorNumber ) ); 
+flog.info( paste0("brain region number: ",length(unique(attr_data[,15])) ) );
 
 result<-read.table("data/GTEx/region_miso_event_result.tsv",sep="\t",header=T,as.is=T); 
-cat(paste0("number of events is: ",length(unique(result[,4])),"\n" ) ,file="result/log.txt",append=TRUE ); 
+flog.info(paste0("number of events is: ",length(unique(result[,4])) )   ); 
 
 gteX_fis_medianPSI<-ddply(result,.(event_name,fis),function(x){
     median_psi<-median(x[,"psi"]);

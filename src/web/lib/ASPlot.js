@@ -2345,7 +2345,7 @@ function submitQueryEvent(e){
 }
 
 function leftPanelButtonOver(){
-	document.images["leftPanelButton"].src= "lib/xl.jpg";
+	document.images["leftPanelButton"].src= "pic/xl.jpg";
 	var leftPanelControl = document.getElementById("leftPanelControl");
 	leftPanelControl.style.display = "block";
 
@@ -2358,7 +2358,7 @@ function validatFrom(){
 }
 
 function leftPanelButtonOut(){
-	document.images["leftPanelButton"].src= "lib/xx.jpg";
+	document.images["leftPanelButton"].src= "pic/xx.jpg";
 
 	var leftPanelControl = document.getElementById("leftPanelControl");
 	leftPanelControl.style.display = "none";
@@ -2548,9 +2548,6 @@ function initVisualPage(event){
 		//visualPage.proteinPlot2.plot();
 		//visualPage.plotGene();
 		//visualPage.plotProtein();
-
-
-
 }
 
 

@@ -87,6 +87,13 @@ public class Build_ptm_table {
 	}
 
 	public static void main(String[] args) {
+		String path_ptm_for_sqllite="/Users/mengli/Documents/splicingSNP_new/data/build_db/ens_ptm_for_sqllite.tsv";
+		build(args[0]);
+		
+		//build(path_ptm_for_sqllite);
+	}
+
+	public static void build(String path_ptm_for_sqllite){
 		try {
 			Configurations configs = new Configurations();
 			
@@ -95,12 +102,12 @@ public class Build_ptm_table {
 			String database_path = config.getString("database_path");
 			Build_ptm_table.get_instance().init(database_path);
 
-			//Build_ptm_table.get_instance().drop_table_ptm();
+			Build_ptm_table.get_instance().drop_table_ptm();
 			Build_ptm_table.get_instance().create_table_ptm();
 			Build_ptm_table.get_instance()
-					.load_ptm_into_table("/Users/mengli/Documents/exon_impact_new/data/build_db/ens_ptm_for_sqllite.tsv");
+					.load_ptm_into_table(path_ptm_for_sqllite);
 			
-			//
+			//57875
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -114,7 +121,6 @@ public class Build_ptm_table {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
-
+	
 }

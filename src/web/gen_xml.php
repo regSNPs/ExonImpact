@@ -4,13 +4,23 @@ $raw_input=$_POST['raw_input'];
 $file_name=$_POST['file_name'];
 $transcript_id=$_POST['transcript_id'];
 
-$error=exec("/data2/www/ExonImpact2/jdk1.8.0_51/bin/java -cp \"Run.jar:lib_jar/*\" ccbb.hrbeu.exonimpact.test.Gen_xml ".$raw_input." ".$transcript_id." ".$file_name." >error3_".$file_name." 2>&1");
+$sock = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+//socket_bind($sock, '127.0.0.1', 8889+2);
 
-//print_r("java -jar Gen_xml.jar ".$raw_input." ".$transcript_id." ".$file_name." >error3_".$file_name." 2>&1");
-//echo $error;
-//print_r($raw_input);
-//print_r($file_name);
+
+$msg = $raw_input."$".$transcript_id."$".$file_name;
+$len = strlen($msg);
+
+socket_sendto($sock, $msg, $len, 0, '127.0.0.1', 8889);
+
+
+$buf="ID";
+$from = '127.0.0.1';
+$port = 8889;
+$r = socket_recvfrom($sock, $buf, 512, 0, $from, $port);
+#echo "the recieve message is:".$buf;
+
+socket_close($sock);
 echo $file_name;
-
 
 ?>

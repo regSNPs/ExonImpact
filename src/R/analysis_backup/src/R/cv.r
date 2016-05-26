@@ -8,7 +8,7 @@ crossValidateRandomForest<-function(data,crossNum=10){
   for(i in 1:crossNum){
     set.seed(1000);
     testID<-sample(allSampleIDs,onePortionSize,replace=FALSE); 
-    print(paste0("cross-validate number: ",i) );
+    flog.trace(paste0("cross-validate number: ",i) );
     
     allSampleIDs<-setdiff(allSampleIDs,testID); 
     trainID<-setdiff(  1:nrow(data),  testID  ); 

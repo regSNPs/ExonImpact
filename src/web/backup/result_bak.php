@@ -3,10 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 
-<script language="javascript" type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
-
-<script language="javascript" type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-
+<script language="javascript" type="text/javascript"
+	src="lib/jquery-1.11.3.min.js"></script>
 <link rel="stylesheet" type="text/css"
 	href="https://cdn.datatables.net/t/dt/dt-1.10.11/datatables.min.css" />
 
@@ -14,12 +12,12 @@
 	src="https://cdn.datatables.net/t/dt/dt-1.10.11/datatables.min.js"></script>
 
 <link rel="stylesheet" type="text/css"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
 <script language="javascript" type="text/javascript"
 		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
-<link rel="stylesheet" href="lib/as.css" type="text/css"/>
+<link rel="stylesheet" href="lib/as.css" type="text/css">
 
 <title>alternative splicing function prediction</title>
 
@@ -32,12 +30,14 @@
 		<img src="pic/iu.png" align='left' name="center_logo" width="90"
 			height="90" id="Insert_logo" style="display: block;" /> <img
 			src="pic/center_logo.png" width="96" height="95" align="right" "display:block;"/>
-			<div id="header_txt" style="color: white">ExonImpact</div>
-		
+
+		<p align='center'>ExonImpact</p>
+		<div id="header_txt" style="color: white">ExonImpact</div>
+		<!-- end .header -->
 	</div>
 
 
-	<table id="event-desc" align="center">
+	<table id="event-desc">
 		<tr>
 			<td>Skipped Exon</td>
 			<td>A5SS</td>
@@ -162,32 +162,15 @@
 	}
 
 
-	//$error=exec("/data2/www/ExonImpact2/jdk1.8.0_51/bin/java -cp \"Run.jar:lib_jar/*\" ccbb.hrbeu.exonimpact.test.Run ".$query_file_name. " con	figuration.txt > error/error1_".$query_file_name." 2>&1",$output1 );
-	$sock = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
-	//socket_bind($sock, '127.0.0.1', 10000+rand(0,50000));
-	
+	$error=exec("/data2/www/ExonImpact2/jdk1.8.0_51/bin/java -cp \"Run.jar:lib_jar/*\" ccbb.hrbeu.exonimpact.test.Run ".$query_file_name. " configuration.txt > error1_".$query_file_name." 2>&1",$output1 );
 
-	$msg = $query_file_name;
-	$len = strlen($msg);
-
- 	socket_sendto($sock, $msg, $len, 0, '127.0.0.1', 8889);
-	
-	$buf="ID";
-
-	$from = '127.0.0.1';
-	$port = 8889;
-	$r = socket_recvfrom($sock, $buf, 512, 0, $from, $port);
-	//echo "the recieve message is:".$buf;
-	socket_close($sock);
-	
-	
 	//putenv("R_LIBS=C:\\Documents and Settings\\Administrator\\My Documents\\R\win-library\\3.2");
 	//putenv("R_LIBS=/home/yunliu/R/x86_64-redhat-linux-gnu-library/3.2");
 	putenv("R_LIBS=/home/yunliu/R/x86_64-redhat-linux-gnu-library/3.2");
 	//$error=exec("");
-	//$error=exec("/usr/bin/Rscript R/predict.r usr_input/".$query_file_name. " > error/error2_".$query_file_name." 2>&1",$output2);
-	$error=exec("/usr/bin/Rscript R/predict.r usr_input/".$query_file_name. "_features.csv > error/error2_".$query_file_name." 2>&1",$output2);
-	$error=exec("mv ".$query_file_name." usr_input/");
+	//$error=exec("/usr/bin/Rscript R/predict.r usr_input/".$query_file_name. " > error2_".$query_file_name." 2>&1",$output2);
+	$error=exec("/usr/bin/Rscript R/predict.r usr_input/".$query_file_name. " > error2_".$query_file_name." 2>&1",$output2);
+
 	echo "<div id=\"runPart\">";
 
 	print($error);
@@ -196,7 +179,7 @@
 
 	//echo $error;
 
-	echo "<p id=\"query_file_name\">".$query_file_name."_features.csv</p>";
+	echo "<p id=\"query_file_name\">".$query_file_name."</p>";
 
 	echo "</div>";
 
@@ -260,6 +243,9 @@ part-->
 <hr></hr>
 
 <script type="text/javascript">
+
+
+
 
 
 </script>
@@ -354,15 +340,15 @@ var selected = [];
     $('#example').DataTable( {
 
         "processing": true,
-        "serverSide": false,
+        "serverSide": true,
         //"ajax": '/ExonImpact/'+query_file_name+'/'+query_file_name+'.predict.json.tsv',
         "ajax": 'usr_input/'+query_file_name+'.predict.json.tsv',
 
 		"columns": [
 			{"className": 'details-control',
 				"orderable":      false,
-                "data":           "                       ",
-                "defaultContent": '                       '},
+                "data":           "                   ",
+                "defaultContent": '                   '},
 
 			{ "data": "transcript_id" },
 			{ "data": "raw_input" },
@@ -435,7 +421,7 @@ var selected = [];
 				browser_init("usr_xml/"+output);
 
 				},
-				async:false
+				async:true
 		});
 		
     });

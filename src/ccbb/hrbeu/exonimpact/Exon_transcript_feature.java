@@ -45,9 +45,9 @@ public class Exon_transcript_feature {
 	public static ArrayList<String> feature_names2=new ArrayList<String>();
 	
 	static{
-		feature_names1.add("raw_input");feature_names1.add("transcript_id");
+		feature_names1.add("raw_input");feature_names1.add("transcript_id");feature_names1.add("gene_id");
 		feature_names1.add("is_match");feature_names1.add("is_protein");
-		feature_names1.add("target_region");feature_names1.add("target_region_in_protein");
+		feature_names1.add("target_region");feature_names1.add("target_region_length");feature_names1.add("target_region_in_protein");
 		
 		feature_names1.add("phylop");
 		
@@ -73,9 +73,9 @@ public class Exon_transcript_feature {
 	}
 	
 	static{
-		feature_names2.add("raw_input");feature_names2.add("transcript_id");
+		feature_names2.add("raw_input");feature_names2.add("transcript_id");feature_names2.add("gene_id");
 		feature_names2.add("is_match");feature_names2.add("exon_id");feature_names2.add("is_protein");
-		feature_names2.add("target_region");feature_names2.add("target_region_in_protein");
+		feature_names2.add("target_region");feature_names2.add("target_region_length");feature_names2.add("target_region_in_protein");
 		
 		feature_names2.add("phylop");
 		
@@ -102,12 +102,16 @@ public class Exon_transcript_feature {
 	}
 
 	private int exon_index=-1;
+
+	private String gene_id;
 	
 	public Exon_transcript_feature(String raw_input2, Transcript iter_transcript, Transcript fragment,
 			boolean is_protein_coding, Match_status is_match2, int exon_index,
 			Tris<String, Integer, Integer> exon_region_in_genome2,
 			Tris<String, Integer, Integer> exon_region_in_protein2, ArrayList<Extractor> feature_extractors2) throws ClassNotFoundException, SQLException, IOException, InterruptedException {
 		// TODO Auto-generated constructor stub
+		
+		this.gene_id=iter_transcript.getGene_id();
 		this.miso_frag=fragment;
 		this.transcript=iter_transcript;
 		this.transcript_id = iter_transcript.getTranscript_id();
@@ -330,7 +334,8 @@ public class Exon_transcript_feature {
 		processXMLTranscript(doc,eventRoot);
 		log.trace("output file name is: "+file_name);
 		
-		outputXML(doc,("usr_xml/"+file_name+".xml") );//miso_frag.getExons().get(0).toString()+".xml") );
+		log.trace("curent directory is: "+System.getProperty("user.dir") );
+		outputXML(doc,(file_name+".xml") );//miso_frag.getExons().get(0).toString()+".xml") );
 	}
 	
 	private void processXMLProtein(Document doc, Element tableRoot, Element eventRoot){
@@ -490,12 +495,17 @@ public class Exon_transcript_feature {
 			transformer = transformerFactory.newTransformer();
 
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(fileName));
+			File xml_file = new File(fileName);
+			StreamResult result = new StreamResult(xml_file);
 
 			// Output to console for testing
 			// StreamResult result = new StreamResult(System.out);
 
 			transformer.transform(source, result);
+			xml_file.setExecutable(true, false);
+			xml_file.setReadable(true, false);
+			xml_file.setWritable(true, false);
+			
 		} catch (TransformerConfigurationException e) {
 			System.out.println(e.getMessage());
 		} catch (TransformerException e) {
@@ -507,39 +517,23 @@ public class Exon_transcript_feature {
 	void output(LinkedList<StringBuilder> output_str) throws IOException {
 		StringBuilder line=new StringBuilder();
 		
-		//FileUtils.writeStringToFile(new File(output_str), raw_input.toString(), true);
-		//FileUtils.writeStringToFile(new File(output_str), ",", true);
-		line.append(raw_input+",");
 		
-		//FileUtils.writeStringToFile(new File(output_str), transcript_id.toString(), true);
-		//FileUtils.writeStringToFile(new File(output_str), ",", true);
+		line.append(raw_input.replaceAll("\\t", ":")+",");
 		line.append(transcript_id+",");
-		
-		//FileUtils.writeStringToFile(new File(output_str), is_match.toString(), true);
-		//FileUtils.writeStringToFile(new File(output_str), ",", true);
+		line.append(gene_id+",");
 		line.append(is_match+",");
-
 		
 		line.append(this.transcript_id+":"+exon_index+",");
-
-		//FileUtils.writeStringToFile(new File(output_str), is_protein.toString(), true);
-		//FileUtils.writeStringToFile(new File(output_str), ",", true);
 		line.append(is_protein+",");
 		
-		//FileUtils.writeStringToFile(new File(output_str), exon_region_in_genome.toString(), true);
-		//FileUtils.writeStringToFile(new File(output_str), ",", true);
 		line.append(exon_region_in_genome+",");
 		
+		line.append((exon_region_in_genome.getValue3()-exon_region_in_genome.getValue2()+1)+ ",");
 		
-		//FileUtils.writeStringToFile(new File(output_str), exon_region_in_protein.toString(), true);
-		//FileUtils.writeStringToFile(new File(output_str), ",", true);
 		line.append(exon_region_in_protein+",");
 	
 		for (Double ite_feature_val : features) {
-			//FileUtils.writeStringToFile(new File(output_str), ite_feature_val.toString(), true);
-			//FileUtils.writeStringToFile(new File(output_str), ",", true);
 			line.append(ite_feature_val+",");
-
 		}
 		
 		//line.substring(0, line.length()-2);

@@ -42,4 +42,4 @@ a1000_genome_fis_dpsi_group<-ddply(a1000_genome_fis_dpsi, .(dpsi_group),function
 
 a1000_genome_fis_dpsi_group %<>% rename(dpsi_group_label=V1) %>% rename(number_of_b0.91=V2) %>% rename(total=V3) %>% rename(percent=V4);
 
-write.table(a1000_genome_fis_dpsi_group,file="result/log.txt",sep="\t",row.names=FALSE,append=TRUE);
+flog.info(a1000_genome_fis_dpsi_group);

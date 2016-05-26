@@ -9,6 +9,10 @@ public class ExtendBEDFeature extends FullBEDFeature {
 	Logger log = Logger.getLogger(ExtendBEDFeature.class);
 
 	boolean is_protein_coding = false;
+	
+	String protein_id=null;
+	
+	String gene_id=null;
 
 	public ExtendBEDFeature(String chr, int start, int end) {
 		super(chr, start, end);
@@ -24,5 +28,21 @@ public class ExtendBEDFeature extends FullBEDFeature {
 	}
 	
 	public Transcript transcript=new Transcript();
+
+	public String getProtein_id() {
+		return protein_id;
+	}
+
+	public void setProtein_id(String protein_id) {
+		this.protein_id = protein_id;
+	}
+
+	public String getGene_id() {
+		return gene_id;
+	}
+
+	public void setGene_id(String gene_id) {
+		this.gene_id = gene_id;
+	}
 	
 }

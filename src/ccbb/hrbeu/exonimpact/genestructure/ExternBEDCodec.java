@@ -108,12 +108,20 @@ public class ExternBEDCodec extends AsciiFeatureCodec<ExtendBEDFeature> {
 		if (tokenCount > 11) {
 			createExons(start, tokens, feature, feature.getStrand());
 		}
-		if (tokenCount > 12) {
+		
+		if(tokenCount>12){
+			feature.gene_id=tokens[12];
+		}
+		
+		if (tokenCount > 13) {
 
-			if (tokens[12].equals(""))
+			if (tokens[13].equals("")){
 				feature.is_protein_coding = false;
-			else
+				feature.protein_id="NA";
+			}else{
 				feature.is_protein_coding = true;
+				feature.protein_id=tokens[13];				
+			}
 		}
 
 		return feature;

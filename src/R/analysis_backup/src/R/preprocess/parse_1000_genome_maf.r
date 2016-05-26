@@ -31,5 +31,5 @@ colnames(result)<-c("transcript_exon_id","dpsi");
 write.table(result,file="data/1000_genome_MAF5/transcript_exon_id_dpsi_mapping.tsv",quote=FALSE,row.names = FALSE,sep="\t");
 
 cat(as.character(result[,"transcript_exon_id"]),
-    file="data/1000_genome_MAF5/1000_genome_MAF5_splicingJunction20_transcript_exon_id",sep="\n");
+    file="data/1000_genome_MAF5/1000_genome_MAF5_splicingJunction20_transcript_exon_id",sep="\n" );
 

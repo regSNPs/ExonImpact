@@ -8,10 +8,8 @@ hgmd_data_anno<-as.data.frame(hgmd_data_anno);
 #funcs<-hgmd_data_anno[,"Func.refGene"];#
 hgmd_data_anno_splicing<-hgmd_data_anno[hgmd_data_anno[,"Func.ensGene"]=="splicing",];
 
-cat(paste0("The number of snp in HGMD splicing site is: ",nrow(hgmd_data_anno_splicing),
-           "\tevidenct: data/hgmd_raw_data/hgmd_splicing.hg19_multianno.txt","\n"),
-    
-    file="result/log.txt",append=TRUE );
+flog.info(paste0("The number of snp in HGMD splicing site is: ",nrow(hgmd_data_anno_splicing),
+           "\tevidenct: data/hgmd_raw_data/hgmd_splicing.hg19_multianno.txt") );
 
 #AAChange.refGene
 aa_change_splicing<-as.character(hgmd_data_anno_splicing[,"GeneDetail.ensGene"]);

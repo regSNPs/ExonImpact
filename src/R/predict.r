@@ -1,10 +1,9 @@
 library(randomForest)
-library(plyr)
 #source("Global.r")
 #source("multiPlot.r");
 
 despv<-commandArgs(TRUE)[[1]];
-#despv<-"/Users/mengli/Documents/splicingSNP_new/data/build_db/miso_test/se_events_features.csv";
+#despv<-"C:\\Documents and Settings\\Administrator\\workspace\\ExonImpact\\usr_input\\test_1.txt";
 
 #"forest"
 load("model");
@@ -12,27 +11,17 @@ load("model");
 despData<-read.table(file=despv, sep=",",header=TRUE,fill=TRUE,row.names=NULL);
 #colnames(despData)<-colnames(despData)[-1]
 
-despData<-despData[,1:38]
+#despData<-despData[,]
 
 despData_noNa<-despData[!is.na(despData[,ncol(despData)]),,drop=FALSE];
 
-despData_noNa_filter<-despData_noNa[,,drop=FALSE];
 
-despData_noNa_filter_one_trans<-ddply(despData_noNa_filter,.(raw_input),function(x){
-	if(is.element("whole_match",x[,"is_match"]) ){
-		y<-subset(x,is_match=="whole_match");
-		return(y[1,-1]);
-	}else{
-		return(x[1,-1]);
-	}
-	
-});
+#despData_noNa_filter<-despData_noNa[,,drop=FALSE];
+despData_noNa_filter<-despData_noNa;
 
+disease_probability<-predict(modelrandomforestAll,despData_noNa_filter,type="prob")[,1];
 
-disease_probability<-predict(modelrandomforestAll,despData_noNa_filter_one_trans,type="prob")[,1];
-
-
-resultTable<-cbind(disease_probability,despData_noNa_filter_one_trans);
+resultTable<-cbind(disease_probability,despData_noNa_filter);
 
 
 allFeatureNames<-c("transcript_id","raw_input","disease_probability","phylop",
@@ -48,7 +37,7 @@ resultTable<-resultTable[,allFeatureNames]
 
 
 write.table(resultTable,file=paste0(despv,".predict.tsv"),
-            sep="\t",row.names=FALSE,col.names=FALSE, 
+            sep="\t",row.names=FALSE,col.names=TRUE, 
             quote=FALSE ,append=TRUE);
 
 jsonFileName<-paste0(despv,".predict.json.tsv");
@@ -60,7 +49,12 @@ for(i in 1:nrow(resultTable)){
   cat(paste0("\"",colnames(resultTable)[1],"\":\"",resultTable[i,1],"\"\n"),file=jsonFileName,append=TRUE); 
   
   for(j in 2:ncol(resultTable)){
-    cat(paste0(",\n\"",colnames(resultTable)[j],"\":\"",resultTable[i,j],"\""),file=jsonFileName ,append=TRUE); 
+	the_possible_digit<-resultTable[i,j];
+	if(is.numeric(the_possible_digit)  ){
+		the_possible_digit<-signif(the_possible_digit,3);
+	}
+	
+    cat(paste0(",\n\"",colnames(resultTable)[j],"\":\"",the_possible_digit,"\""),file=jsonFileName ,append=TRUE); 
   }
   
   if(i!=nrow(resultTable)){

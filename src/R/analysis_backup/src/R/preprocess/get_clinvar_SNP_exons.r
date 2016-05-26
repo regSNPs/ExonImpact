@@ -21,13 +21,14 @@ benign_transcripts<-
                               'Func.ensGene=splicing[^;]*;Gene.ensGene=[^;]*;GeneDetail.ensGene=(ENST[^:]+:exon[^:]+)') ;
 benign_transcripts_noNa<-benign_transcripts[!is.na(benign_transcripts)];
                 
-cat(paste0("Number of beign SNPs is ",length(benign_transcripts_noNa),"\n" ),file="result/log.txt",append=TRUE);
+flog.info(paste0("Number of beign SNPs is ",length(benign_transcripts_noNa) ) );
 
 benign_transcripts_noNa_ids<-benign_transcripts_noNa[str_detect(benign_transcripts_noNa,"^ENST.*")];
 benign_transcripts_noNa_ids_transcript_exon_id<-
   str_c(str_sub(benign_transcripts_noNa_ids,1,15),":",str_sub(benign_transcripts_noNa_ids,21) );
 
-cat(benign_transcripts_noNa_half_transcript_exon_id,file="data/clinvar/clinvar_benign_snp_transcript_exon_id",sep="\n");
+cat(benign_transcripts_noNa_half_transcript_exon_id,
+    file="clinvar_benign_snp_transcript_exon_id",sep="\t" );
 
  
 ##########################################parse pathogenic############################################################
@@ -35,7 +36,7 @@ pathogenic_transcripts<-str_match(clinvar_pathogenic_snp_data[,"X8"],
                                   'Func.ensGene=splicing[^;]*;Gene.ensGene=[^;]*;GeneDetail.ensGene=(ENST[^:]+:exon[^:]+)'); 
 pathogenic_transcripts_noNa<-pathogenic_transcripts[!is.na(pathogenic_transcripts)];
 
-cat(paste0("Number of pathogenic SNPs is ",length(pathogenic_transcripts_noNa),"\n" ),file="result/log.txt",append=TRUE);
+flog.info(paste0("Number of pathogenic SNPs is ",length(pathogenic_transcripts_noNa)  )  );
 
 pathogenic_transcripts_noNa_half<-pathogenic_transcripts_noNa[str_detect(pathogenic_transcripts_noNa,"^ENST.*")];
 
@@ -43,7 +44,6 @@ pathogenic_transcripts_noNa_half_transcript_exon_id<-
   str_c(str_sub(pathogenic_transcripts_noNa_half,1,15),":",str_sub(pathogenic_transcripts_noNa_half,21) );
 
 cat(pathogenic_transcripts_noNa_half_transcript_exon_id,
-    file="data/clinvar/clinvar_pathogenic_snp_transcript_exon_id",sep="\n");
-
+    file="clinvar_pathogenic_snp_transcript_exon_id",sep="\t" );
 
 

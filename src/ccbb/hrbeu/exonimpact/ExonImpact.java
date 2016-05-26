@@ -75,10 +75,12 @@ public class ExonImpact {
 		
 		Class.forName("org.sqlite.JDBC");
 				
-		conn = DriverManager.getConnection("jdbc:sqlite:");
+		conn = DriverManager.getConnection("jdbc:sqlite:"+database_path);
 		
+		//!TODO The below three lines will lead to error in watson
 		Statement stat = conn.createStatement();
-		stat.executeUpdate("restore from "+database_path);
+		log.info("the SQL statement is: restore from '"+database_path+"'");
+		//stat.executeUpdate("restore from "+database_path);
 
 		Extractor_Pfam_feature.get_instance().init(conn);
 		Extractor_Ptm_feature.get_instance().init(conn);
@@ -91,7 +93,7 @@ public class ExonImpact {
 	
 	public void batch_run() throws ClassNotFoundException, SQLException, IOException, InterruptedException {
 		int  input_count=0;
-		
+		exon_features.clear();
 		for (String iter_input : input_str_arr) {
 				
 			log.trace("process input: " + iter_input+" number_index is: "+input_count++);
@@ -118,7 +120,7 @@ public class ExonImpact {
 		
 		line.append("\n");
 		
-		FileUtils.write(new File(output_file_name), line.toString(), true);
+		FileUtils.write(new File(output_file_name), line.toString(), false);
 		
 		int  input_count=0;
 		Exon_feature t_feature;
@@ -188,6 +190,7 @@ public class ExonImpact {
 	}
 	
 	public void read_from_file(String input_file_name) throws IOException {
+		log.info("the input file path is: "+input_file_name);
 		input_str_arr = FileUtils.readLines(new File(input_file_name));
 	}
 

@@ -48,15 +48,22 @@ plotcoilasa<-function(){
                           )+
      scale_colour_discrete(name  ="Feature",
                       breaks=c("p_e", "p_c","p_h","disorder","asa"),
-       labels=c("beta sheet", "random coil","alpha helix","disoder","asa") )+xlab("amino aicd index")+
+       labels=c("beta sheet", "random coil","alpha helix","disoder","asa") )+xlab("amino acid index")+
     geom_text(x=125,y=10, fontface = "bold",label="b  ",size = 3,family="Helvetica")+
     #geom_text(x=280,y=12,size = 3,colour="#333333",label="Strucutre features of NM_014946",family="Helvetica");
-    ggtitle("Strucutre features of NM_014946");
+    ggtitle("Structure features of NM_014946");
+  
+  
   
   p1<-ggplot(all_data_filter)+geom_point(aes(x=ss_8,y=asa_1,color=label,shape=label),size=1 )+theme_classic()+
     xlab("ss_8 (min probability of the amino acid in coil)")+
     ylab("asa_1 (average ASA in translated amino acid sequence)")+
-    scale_fill_discrete(name="",palette=platt_color,labels=c("HGMD","NEUTRAL"))+#+scale_color_identity()+
+    geom_segment(aes(x=min(ss_8),xend=max(ss_8),y=median(asa_1),
+                     yend=median(asa_1) ),color="black",linetype=2,size=0.5 )+
+    geom_text(aes(x=max(ss_8)-(max(ss_8)-min(ss_8))/6,y=median(asa_1)-(max(asa_1)-min(asa_1))/50 ),
+              label="Median of Average ASA" ,size=2)+
+    
+    scale_fill_discrete(name=" ",palette=platt_color,labels=c("HGMD","NEUTRAL"))+#+scale_color_identity()+
     
     annotate("rect", xmin = 0.72, xmax = 0.9, ymin = 24, ymax = 46,
              alpha = .1)+
