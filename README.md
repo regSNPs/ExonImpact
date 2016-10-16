@@ -12,9 +12,9 @@ So in all, the install procedure include:
 # Install
 1.download the database from our database:  
 wget http://watson.compbio.iupui.edu/ExonImpact/db/ensembl.db .  
-wget http://watson.compbio.iupui.edu/ExonImpact/db/phylop/* .  
+wget http://watson.compbio.iupui.edu/ExonImpact/db/phylop.tar.gz .  
 wget http://watson.compbio.iupui.edu/ExonImpact/db/ens_extern_hg19.bed .  
-wget http://watson.compbio.iupui.edu/ExonImpact/db/chrom/* .   
+wget http://watson.compbio.iupui.edu/ExonImpact/db/chrom.tar.gz .   
 
 2.set the path in 'configuration.txt'  
 Set the path to the download database in the configuration.txt file.  
