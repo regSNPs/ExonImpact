@@ -17,10 +17,10 @@ So in all, the install procedure include:
 
 # Install
 1.douwnload the source code from this website, and download the database from our database:  
-wget http://watson.compbio.iupui.edu/ExonImpact/db/ensembl.db .  
-wget http://watson.compbio.iupui.edu/ExonImpact/db/phylop.tar.gz .  
-wget http://watson.compbio.iupui.edu/ExonImpact/db/ens_extern_hg19.bed .  
-wget http://watson.compbio.iupui.edu/ExonImpact/db/chrom.tar.gz .   
+wget http://1bnx.f.time4vps.cloud/ExonImpact2/db/ensembl.db .  
+wget http://1bnx.f.time4vps.cloud/ExonImpact2/db/phylop.tar.gz .  
+wget http://1bnx.f.time4vps.cloud/ExonImpact2/db/ens_extern_hg19.bed .  
+wget http://1bnx.f.time4vps.cloud/ExonImpact2/db/chrom.tar.gz .   
 
 2.set the path in 'configuration.txt'  
 Set the path to the download database in the configuration.txt file.  
@@ -43,7 +43,7 @@ The file is in the source folder.
 If you found this tool useful, please cite our paper and star it on the Github. We welcome anyone to improve our tool. 
 <ExonImpact: Prioritizing Pathogenic Alternative Splicing Events>
 
-Contact information yunliu@iupui.edu or li487@iupui.edu.
+Contact information yunliu@iupui.edu or limeng@picb.ac.cn.
 
 #Some explanation
 
