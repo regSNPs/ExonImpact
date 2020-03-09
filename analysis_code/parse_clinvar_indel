@@ -1,0 +1,23 @@
+###parse Clinvar to get exons contain indel in benign group and exons contain indels in pathogenic group.
+perl table_annovar.pl clinvar.vcf humandb/ -buildver hg19 -out clinvar.ens -remove -protocol ensGene -operation g -nastring . -vcfinput
+#the output of the abover step is clinvar.ens.hg19_multianno.vcf
+
+#get the benign variants
+grep -E "CLNSIG=[^;]*2[^5]{1}[^;]*;|CLNSIG=[^;]*2;" clinvar.ens.hg19_multianno.vcf > clinvar_ens.hg19_multianno_benign.vcf
+
+#get the pathogenic variants
+grep -E "CLNSIG=[^;]*[^25]{1}5[^;]*;|CLNSIG=5[^;]*;" clinvar.ens.hg19_multianno.vcf > clinvar_ens.hg19_multianno_pathogenic.vcf
+ 
+
+#keep only the indels and get the AAchange column for benign group.
+vcftools --keep-only-indels  --vcf clinvar_ens.hg19_multianno_benign.vcf --get-INFO AAChange.ensGene --out benign_indel_aachange_table
+
+#get the AA change change column for benign group.
+awk '{print $5}' benign_indel_aachange_table.INFO >benign_indel_aachange
+
+
+#keep only the indels and get the AAchange column for pathogenic group.!
+#vcftools --keep-only-indels --vcf clinvar_ens.hg19_multianno_pathogenic.vcf --get-INFO AAChange.ensGene --out pathogenic_indel_aachange_table
+
+#keep only the indels and get the AAchange column for pathogenic group.!
+awk '{print $5}' pathogenic_indel_aachange_table.INFO >pathogenic_indel_aachange

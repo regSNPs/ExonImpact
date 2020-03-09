@@ -1,0 +1,27 @@
+###parse 1000 genome indel
+
+#annotate_variation.pl -buildver hg19 -downdb -webfrom annovar refGene humandb/
+
+#we use ensembl annotation since we have more proteins predicted by SPINE-X&SPINE-D
+annotate_variation.pl -buildver hg19 -downdb -webfrom annovar ensGene humandb/
+
+#keep only the indels in the 1000 genome vcf
+vcftools --gzvcf ALL.wgs.phase3_shapeit2_mvncall_integrated_v5a.20130502.sites.vcf.gz 
+ --keep-only-indels --recode --recode-INFO-all --out ALL.wgs.phase3_shapeit2_mvncall_integrated_v5a.20130502.sites.indel
+
+#annotate the indel to get the transcript&exon id information from the vcf file
+#perl table_annovar.pl #/home/limeng/splicingSNP/annotation/1000genome/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5a.20130502.sites.inde#l.vcf.recode.vcf 
+# humandb/ -buildver hg19 -out 1000_genome_indel -remove -protocol ensGene -operation g -nastring . -vcfinput
+ 
+perl table_annovar.pl ../../projects/exon_impact/1000genome/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5a.20130502.sites.indel.vcf.recode.vcf humandb/ -buildver hg19 -out 1000_genome_indel -remove -protocol ensGene -operation g -nastring . -vcfinput
+ 
+#get the AAChange.ensGene, synonymous , nonsynonymous and indels have this column, while in splicing site and intronic, this field means nothing.
+
+grep -e 'AF=0\.[1-9]' -e 'AF=0\.0[5-9]' 1000_genome_indel.hg19_multianno.vcf > 1000_genome_indel.hg19_multianno.vcf.maf5.vcf
+
+vcftools --vcf 1000_genome_indel.hg19_multianno.vcf --get-INFO AAChange.ensGene
+vcftools --vcf 1000_genome_indel.hg19_multianno.vcf.maf5.vcf --get-INFO AAChange.ensGene
+
+
+#get the unique transcript&exon ids.
+awk '{print $5}' out.INFO | sort -u > aa_change_uniq
