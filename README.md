@@ -1,5 +1,9 @@
-# Web Server
+# Paper
+https://www.ncbi.nlm.nih.gov/pubmed/27604408
+ExonImpact: Prioritizing Pathogenic Alternative Splicing Events.
 
+# Web Server
+This website and associate databased are nolonger maintained, all the necessary code and data are list in github or in the published paper.
 http://1bnx.f.time4vps.cloud/ExonImpact2/
 
 # ExonImpact
